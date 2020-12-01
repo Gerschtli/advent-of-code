@@ -1,0 +1,40 @@
+name: Test
+on:
+  - push
+  - pull_request
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        directory:
+          - 2020/01
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15.x
+
+      - name: Use cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/go/pkg/mod      # Module download cache
+            ~/.cache/go-build # Build cache (Linux)
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Check go fmt
+        run: test -z "$(gofmt -l)"
+        working-directory: ${{ matrix.directory }}
+
+      - name: Run go test
+        run: go test -v ./...
+        working-directory: ${{ matrix.directory }}
