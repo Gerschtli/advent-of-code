@@ -38,3 +38,53 @@ jobs:
       - name: Run go test
         run: go test -v ./...
         working-directory: ${{ matrix.directory }}
+
+  rust:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        directory:
+          - 2020/02
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+          components: rustfmt, clippy
+
+      - name: Use cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-
+
+      - name: Check coding style
+        run: echo $(pwd); cargo fmt --verbose -- --check
+        working-directory: ${{ matrix.directory }}
+
+      - name: Run cargo check
+        run: cargo check --verbose
+        working-directory: ${{ matrix.directory }}
+
+      - name: Run cargo build
+        run: cargo build --verbose
+        working-directory: ${{ matrix.directory }}
+
+      - name: Run cargo clippy
+        run: cargo clippy --verbose
+        working-directory: ${{ matrix.directory }}
+
+      - name: Run cargo test
+        run: cargo test --verbose
+        working-directory: ${{ matrix.directory }}

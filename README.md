@@ -6,10 +6,20 @@ These are my solutions to the [adventofcode.com](https://adventofcode.com/) chal
 
 ## How to run
 
-You need go 1.15 installed or use my `shell.nix`.
+You need go 1.15 and rustup (with a recent rust version) installed or use my `shell.nix`.
 
-Go applications can be run like:
+### Go applications
+
+Can be run like:
 ```sh
 cd 2020/01
 go run ./main.go
+```
+
+### Rust applications
+
+Can be run like:
+```sh
+cd 2020/02
+cargo run
 ```
