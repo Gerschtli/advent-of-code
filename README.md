@@ -10,5 +10,6 @@ You need go 1.15 installed or use my `shell.nix`.
 
 Go applications can be run like:
 ```sh
-go run ./2020/01/main.go
+cd 2020/01
+go run ./main.go
 ```
