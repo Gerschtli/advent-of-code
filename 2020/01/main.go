@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"log"
 	"os"
 	"strconv"
@@ -20,14 +19,14 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("found numbers (%v, %v), product is %v\n", number1, number2, number1*number2)
+	log.Printf("found numbers (%v, %v), product is %v\n", number1, number2, number1*number2)
 
 	number1, number2, number3, err := findMatchingTriple(numbers)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("found numbers (%v, %v, %v), product is %v\n", number1, number2, number3, number1*number2*number3)
+	log.Printf("found numbers (%v, %v, %v), product is %v\n", number1, number2, number3, number1*number2*number3)
 }
 
 func loadNumbers(filename string) ([]int, error) {
