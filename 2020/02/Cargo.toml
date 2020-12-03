@@ -5,6 +5,7 @@ authors = ["Tobias Happ <tobias.happ@gmx.de>"]
 edition = "2018"
 
 [dependencies]
+regex = "1.4.2"
 
 [dev-dependencies]
 hamcrest2 = "0.3.0"
