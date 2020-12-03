@@ -5,3 +5,6 @@ authors = ["Tobias Happ <tobias.happ@gmx.de>"]
 edition = "2018"
 
 [dependencies]
+
+[dev-dependencies]
+hamcrest2 = "0.3.0"
