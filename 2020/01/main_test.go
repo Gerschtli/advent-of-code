@@ -1,12 +1,29 @@
 package main
 
 import (
+	"bytes"
+	"log"
 	"os"
 	"strconv"
+	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+func TestMainLogsResults(t *testing.T) {
+	var buf bytes.Buffer
+	log.SetOutput(&buf)
+	main()
+	log.SetOutput(os.Stdout)
+
+	lines := strings.Split(buf.String(), "\n")
+
+	assert.Len(t, lines, 3)
+	assert.Contains(t, lines[0], "found numbers (528, 1492), product is 787776")
+	assert.Contains(t, lines[1], "found numbers (447, 611, 962), product is 262738554")
+	assert.Empty(t, lines[2])
+}
 
 func TestLoadNumbersParsesFileContent(t *testing.T) {
 	numbers, err := loadNumbers("./files/input_test")
