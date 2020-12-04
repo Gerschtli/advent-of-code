@@ -1,3 +1,8 @@
+// necessary for intellij support
+#[cfg(test)]
+#[macro_use]
+extern crate hamcrest2;
+
 use std::fs;
 use std::io;
 use std::io::BufRead;
@@ -20,14 +25,28 @@ struct Line {
 }
 
 fn main() -> Result<(), AppError> {
-    let lines = read_lines("./files/passwords.txt")?
+    let count = count_valid_lines()?;
+
+    println!("Result: {:#?}", count);
+
+    Ok(())
+}
+
+fn count_valid_lines() -> Result<usize, AppError> {
+    let lines = read_lines("./files/passwords.txt")?;
+
+    let line_vec = lines
         .iter()
         .map(|line| parse_line(line))
         .collect::<Result<Vec<_>, AppError>>()?;
 
-    println!("Result: {:#?}", lines);
+    let count = line_vec
+        .iter()
+        .map(|line| is_valid(line))
+        .filter(|is_valid| *is_valid)
+        .count();
 
-    Ok(())
+    Ok(count)
 }
 
 fn read_lines<P>(filename: P) -> io::Result<Vec<String>>
@@ -61,11 +80,24 @@ fn parse_line(line: &str) -> Result<Line, AppError> {
     })
 }
 
+fn is_valid(line: &Line) -> bool {
+    let count = line.password.chars().filter(|c| &line.char == c).count() as u8;
+
+    line.min <= count && count <= line.max
+}
+
 #[cfg(test)]
 mod tests {
     use hamcrest2::prelude::*;
 
     use super::*;
+
+    #[test]
+    fn count_valid_lines_returns_600() {
+        let count = count_valid_lines();
+
+        assert_that!(count, has(600))
+    }
 
     #[test]
     fn read_lines_returns_every_line_from_file() {
@@ -108,5 +140,56 @@ mod tests {
         assert_that!(line2_unwrapped.max, eq(7));
         assert_that!(line2_unwrapped.char, eq('a'));
         assert_that!(line2_unwrapped.password, eq("abcd"));
+    }
+
+    #[test]
+    fn test_parse_line_returns_error_when_not_valid() {
+        let line = parse_line("1-2: qlfzd");
+
+        assert_that!(&line, err());
+    }
+
+    #[test]
+    fn test_is_valid_returns_true_for_valid_lines() {
+        assert_that!(
+            is_valid(&Line {
+                min: 1,
+                max: 2,
+                char: 'c',
+                password: "acde".to_string(),
+            }),
+            eq(true)
+        );
+        assert_that!(
+            is_valid(&Line {
+                min: 4,
+                max: 8,
+                char: 'a',
+                password: "aaaaaa".to_string(),
+            }),
+            eq(true)
+        );
+    }
+
+    #[test]
+    fn test_is_valid_returns_false_for_invalid_lines() {
+        assert_that!(
+            is_valid(&Line {
+                min: 1,
+                max: 2,
+                char: 'c',
+                password: "acdecc".to_string(),
+            }),
+            eq(false)
+        );
+        assert_that!(
+            is_valid(&Line {
+                min: 4,
+                max: 8,
+                char: 'a',
+                password: "aaabbbb".to_string(),
+            }),
+            eq(false)
+        );
     }
 }
