@@ -16,6 +16,7 @@ func main() {
 
 	position := Position{}
 	count := 0
+	slope := Slope{3, 1}
 	for {
 		isBlocked, bottomReached := m.get(&position)
 		if bottomReached {
@@ -26,7 +27,7 @@ func main() {
 			count++
 		}
 
-		position = position.move()
+		position = position.move(&slope)
 	}
 
 	log.Printf("%v trees found", count)

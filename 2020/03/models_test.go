@@ -50,15 +50,23 @@ func TestMapGetReturnsBottomReachedAccordingToMapHeight(t *testing.T) {
 
 func TestPositionMoveReturnsNewPosition(t *testing.T) {
 	p := Position{1, 2}
-	pNew := p.move()
+	pNew := p.move(&Slope{3, 1})
 
 	assert.Equal(t, 4, pNew.x)
 	assert.Equal(t, 3, pNew.y)
 }
 
+func TestPositionMoveReturnsNewPositionAccordingToSlope(t *testing.T) {
+	p := Position{1, 2}
+	pNew := p.move(&Slope{7, 5})
+
+	assert.Equal(t, 8, pNew.x)
+	assert.Equal(t, 7, pNew.y)
+}
+
 func TestPositionMoveDoesNotChangeInitialPosition(t *testing.T) {
 	p := Position{1, 2}
-	p.move()
+	p.move(&Slope{3, 1})
 
 	assert.Equal(t, 1, p.x)
 	assert.Equal(t, 2, p.y)

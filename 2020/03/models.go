@@ -14,14 +14,19 @@ func (m *Map) get(p *Position) (isBlocked bool, bottomReached bool) {
 	return line[p.x%len(line)], false
 }
 
+type Slope struct {
+	x int
+	y int
+}
+
 type Position struct {
 	x int
 	y int
 }
 
-func (p *Position) move() Position {
+func (p *Position) move(s *Slope) Position {
 	return Position{
-		p.x + 3,
-		p.y + 1,
+		p.x + s.x,
+		p.y + s.y,
 	}
 }
