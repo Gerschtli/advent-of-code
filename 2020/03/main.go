@@ -14,9 +14,21 @@ func main() {
 		log.Fatal(err)
 	}
 
-	count := getTreeCount(&m, &Slope{3, 1})
+	log.Printf("%v trees found", getTreeCount(&m, &Slope{3, 1}))
 
-	log.Printf("%v trees found", count)
+	slopes := []Slope{
+		{1, 1},
+		{3, 1},
+		{5, 1},
+		{7, 1},
+		{1, 2},
+	}
+	product := 1
+	for _, slope := range slopes {
+		product *= getTreeCount(&m, &slope)
+	}
+
+	log.Printf("product of all trees found: %v", product)
 }
 
 func loadMap(filename string) (Map, error) {

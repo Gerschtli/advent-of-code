@@ -15,6 +15,7 @@ func TestMainPrintsTreeCount(t *testing.T) {
 	log.SetOutput(os.Stdout)
 
 	assert.Contains(t, buf.String(), "189 trees found")
+	assert.Contains(t, buf.String(), "product of all trees found: 1718180100")
 }
 
 func TestLoadMapReturnsMap(t *testing.T) {
