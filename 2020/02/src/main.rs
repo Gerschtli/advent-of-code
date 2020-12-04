@@ -25,14 +25,15 @@ struct Line {
 }
 
 fn main() -> Result<(), AppError> {
-    let count = count_valid_lines()?;
+    let (count_sled_rental, count_otca) = count_valid_lines()?;
 
-    println!("Result: {:#?}", count);
+    println!("Result Sled Rental: {:#?}", count_sled_rental);
+    println!("Result OTCA: {:#?}", count_otca);
 
     Ok(())
 }
 
-fn count_valid_lines() -> Result<usize, AppError> {
+fn count_valid_lines() -> Result<(usize, usize), AppError> {
     let lines = read_lines("./files/passwords.txt")?;
 
     let line_vec = lines
@@ -40,13 +41,19 @@ fn count_valid_lines() -> Result<usize, AppError> {
         .map(|line| parse_line(line))
         .collect::<Result<Vec<_>, AppError>>()?;
 
-    let count = line_vec
+    let count_sled_rental = line_vec
         .iter()
         .map(|line| is_valid_for_sled_rental(line))
         .filter(|is_valid| *is_valid)
         .count();
 
-    Ok(count)
+    let count_otca = line_vec
+        .iter()
+        .map(|line| is_valid_for_otca(line))
+        .filter(|is_valid| *is_valid)
+        .count();
+
+    Ok((count_sled_rental, count_otca))
 }
 
 fn read_lines<P>(filename: P) -> io::Result<Vec<String>>
@@ -86,6 +93,18 @@ fn is_valid_for_sled_rental(line: &Line) -> bool {
     line.index_left <= count && count <= line.index_right
 }
 
+fn is_char_at_position(string: &str, index: u8, char: char) -> bool {
+    match string.chars().nth((index - 1) as usize) {
+        Some(c) => c == char,
+        None => false,
+    }
+}
+
+fn is_valid_for_otca(line: &Line) -> bool {
+    is_char_at_position(&line.password, line.index_left, line.char)
+        ^ is_char_at_position(&line.password, line.index_right, line.char)
+}
+
 #[cfg(test)]
 mod tests {
     use hamcrest2::prelude::*;
@@ -96,7 +115,7 @@ mod tests {
     fn count_valid_lines_returns_600() {
         let count = count_valid_lines();
 
-        assert_that!(count, has(600))
+        assert_that!(count, has((600, 245)))
     }
 
     #[test]
@@ -188,6 +207,50 @@ mod tests {
                 index_right: 8,
                 char: 'a',
                 password: "aaabbbb".to_string(),
+            }),
+            eq(false)
+        );
+    }
+
+    #[test]
+    fn test_is_valid_for_otca_returns_true_for_valid_lines() {
+        assert_that!(
+            is_valid_for_otca(&Line {
+                index_left: 1,
+                index_right: 3,
+                char: 'a',
+                password: "abcde".to_string(),
+            }),
+            eq(true)
+        );
+        assert_that!(
+            is_valid_for_otca(&Line {
+                index_left: 4,
+                index_right: 8,
+                char: 'a',
+                password: "wwea".to_string(),
+            }),
+            eq(true)
+        );
+    }
+
+    #[test]
+    fn test_is_valid_for_otca_returns_false_for_invalid_lines() {
+        assert_that!(
+            is_valid_for_otca(&Line {
+                index_left: 1,
+                index_right: 3,
+                char: 'b',
+                password: "cdefg".to_string(),
+            }),
+            eq(false)
+        );
+        assert_that!(
+            is_valid_for_otca(&Line {
+                index_left: 2,
+                index_right: 9,
+                char: 'c',
+                password: "ccccccccc".to_string(),
             }),
             eq(false)
         );
