@@ -11,6 +11,7 @@ jobs:
       matrix:
         directory:
           - 2020/01
+          - 2020/03
 
     steps:
       - name: Checkout code
