@@ -14,21 +14,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	position := Position{}
-	count := 0
-	slope := Slope{3, 1}
-	for {
-		isBlocked, bottomReached := m.get(&position)
-		if bottomReached {
-			break
-		}
-
-		if isBlocked {
-			count++
-		}
-
-		position = position.move(&slope)
-	}
+	count := getTreeCount(&m, &Slope{3, 1})
 
 	log.Printf("%v trees found", count)
 }
@@ -79,4 +65,24 @@ func loadMap(filename string) (Map, error) {
 	}
 
 	return m, nil
+}
+
+func getTreeCount(m *Map, slope *Slope) int {
+	position := Position{}
+	count := 0
+
+	for {
+		isBlocked, bottomReached := m.get(&position)
+		if bottomReached {
+			break
+		}
+
+		if isBlocked {
+			count++
+		}
+
+		position = position.move(slope)
+	}
+
+	return count
 }

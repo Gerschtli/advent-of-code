@@ -50,3 +50,16 @@ func TestLoadMapReturnsErrorWhenLinesNotEquallySized(t *testing.T) {
 		assert.Equal(t, "provided map is not a rectangle", err.Error())
 	}
 }
+
+func TestGetTreeCountReturnsCountForSpecificSlope(t *testing.T) {
+	m := Map{
+		{false, false, true},
+		{true, false, false},
+		{false, true, false},
+		{false, false, true},
+	}
+
+	count := getTreeCount(&m, &Slope{2, 1})
+
+	assert.Equal(t, 1, count)
+}
