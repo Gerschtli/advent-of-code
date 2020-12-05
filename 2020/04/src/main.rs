@@ -8,34 +8,10 @@ use std::{fs, io, path};
 
 use crate::error::AppError;
 use crate::error::Result;
+use crate::passport::Passport;
 
 mod error;
-
-#[derive(Clone, Debug, Eq, PartialEq)]
-struct Passport {
-    /// Birth Year
-    byr: bool,
-    /// Issue Year
-    iyr: bool,
-    /// Expiration Year
-    eyr: bool,
-    /// Height
-    hgt: bool,
-    /// Hair Color
-    hcl: bool,
-    /// Eye Color
-    ecl: bool,
-    /// Passport ID
-    pid: bool,
-    /// Country ID
-    cid: bool,
-}
-
-impl Passport {
-    fn is_valid(&self) -> bool {
-        self.byr && self.iyr && self.eyr && self.hgt && self.hcl && self.ecl && self.pid
-    }
-}
+mod passport;
 
 fn main() -> Result<()> {
     let count = count_passports()?;
@@ -120,66 +96,6 @@ mod tests {
     use hamcrest2::prelude::*;
 
     use super::*;
-
-    #[test]
-    fn passport_is_valid_needs_every_value_except_cid() {
-        assert_that!(
-            Passport {
-                byr: true,
-                iyr: true,
-                eyr: true,
-                hgt: true,
-                hcl: true,
-                ecl: true,
-                pid: true,
-                cid: true,
-            }
-            .is_valid(),
-            eq(true)
-        );
-        assert_that!(
-            Passport {
-                byr: true,
-                iyr: true,
-                eyr: true,
-                hgt: false,
-                hcl: true,
-                ecl: true,
-                pid: true,
-                cid: true,
-            }
-            .is_valid(),
-            eq(false)
-        );
-        assert_that!(
-            Passport {
-                byr: true,
-                iyr: true,
-                eyr: true,
-                hgt: true,
-                hcl: true,
-                ecl: true,
-                pid: true,
-                cid: false,
-            }
-            .is_valid(),
-            eq(true)
-        );
-        assert_that!(
-            Passport {
-                byr: false,
-                iyr: true,
-                eyr: true,
-                hgt: true,
-                hcl: true,
-                ecl: true,
-                pid: true,
-                cid: false,
-            }
-            .is_valid(),
-            eq(false)
-        );
-    }
 
     #[test]
     fn count_passports_returns_202() {
