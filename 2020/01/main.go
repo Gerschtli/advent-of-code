@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	numbers, err := loadNumbers("./files/input")
+	numbers, err := loadNumbers("./files/input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}

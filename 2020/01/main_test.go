@@ -26,14 +26,14 @@ func TestMainLogsResults(t *testing.T) {
 }
 
 func TestLoadNumbersParsesFileContent(t *testing.T) {
-	numbers, err := loadNumbers("./files/input_test")
+	numbers, err := loadNumbers("./files/input_test.txt")
 
 	assert.Nil(t, err)
 	assert.Equal(t, []int{1, 2, 3}, numbers)
 }
 
 func TestLoadNumbersReturnsErrorWhenFileContentIsNoInteger(t *testing.T) {
-	_, err := loadNumbers("./files/input_invalid_test")
+	_, err := loadNumbers("./files/input_invalid_test.txt")
 
 	assert.IsType(t, &strconv.NumError{}, err)
 }
