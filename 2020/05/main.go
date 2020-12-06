@@ -13,6 +13,10 @@ type seat struct {
 	column int
 }
 
+func (s *seat) id() int {
+	return s.row*8 + s.column
+}
+
 func buildSeatByCode(code string) (seat, error) {
 	if len(code) != 10 {
 		return seat{}, errors.New(fmt.Sprintf("code invalid: need 10 chars [%v]", code))

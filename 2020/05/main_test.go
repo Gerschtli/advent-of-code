@@ -22,6 +22,17 @@ func TestMainLogsResults(t *testing.T) {
 	assert.Empty(t, lines[0])
 }
 
+func TestSeatIdReturnsId(t *testing.T) {
+	s := seat{70, 7}
+	assert.Equal(t, 567, s.id())
+
+	s = seat{14, 7}
+	assert.Equal(t, 119, s.id())
+
+	s = seat{102, 4}
+	assert.Equal(t, 820, s.id())
+}
+
 func TestBuildSeatByCodeReturnsValidSeats(t *testing.T) {
 	s, err := buildSeatByCode("BFFFBBFRRR")
 	assert.Nil(t, err)
