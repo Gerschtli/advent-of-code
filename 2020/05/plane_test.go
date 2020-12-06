@@ -30,6 +30,42 @@ func TestPlaneMarkSeatTakenWithOffset(t *testing.T) {
 	assert.Equal(t, true, p.seats[0][0])
 }
 
+func TestPlaneMarkFrontAndBackRowTaken(t *testing.T) {
+	p := plane{seats: [][]bool{
+		{true, false, false},
+		{false, true, false},
+		{false, false, true},
+	}, offset: 1}
+	expected := plane{seats: [][]bool{
+		{true, true, true},
+		{false, true, false},
+		{true, true, true},
+	}, offset: 1}
+
+	p.markFrontAndBackRowTaken()
+
+	assert.Equal(t, expected, p)
+}
+
+func TestPlaneShrinkPlaneSizeRemovesEmptyRowsAtFrontAndBack(t *testing.T) {
+	p := plane{seats: [][]bool{
+		{false, false, false},
+		{true, false, false},
+		{false, false, false},
+		{false, true, false},
+		{false, false, false},
+	}, offset: 1}
+	expected := plane{seats: [][]bool{
+		{true, false, false},
+		{false, false, false},
+		{false, true, false},
+	}, offset: 2}
+
+	p.shrinkPlaneSize()
+
+	assert.Equal(t, expected, p)
+}
+
 func TestPlaneGetFreeSeatsReturnsSliceOfSeats(t *testing.T) {
 	p := plane{seats: [][]bool{{false, true}, {true, false}}, offset: 1}
 
