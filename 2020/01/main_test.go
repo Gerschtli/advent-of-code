@@ -38,12 +38,6 @@ func TestLoadNumbersReturnsErrorWhenFileContentIsNoInteger(t *testing.T) {
 	assert.IsType(t, &strconv.NumError{}, err)
 }
 
-func TestLoadNumbersReturnsErrorWhenFileNotFound(t *testing.T) {
-	_, err := loadNumbers("./files/not_found_test")
-
-	assert.IsType(t, &os.PathError{}, err)
-}
-
 func TestFindMatchingPairReturnsPairWhenFound(t *testing.T) {
 	numbers := []int{1721, 979, 366, 299, 675, 1456}
 	number1, number2, err := findMatchingPair(numbers)

@@ -1,11 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"errors"
 	"log"
-	"os"
 	"strconv"
+
+	"github.com/Gerschtli/advent-of-code/lib/go/file"
 )
 
 func main() {
@@ -30,28 +30,16 @@ func main() {
 }
 
 func loadNumbers(filename string) ([]int, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		err := file.Close()
-		if err != nil {
-			log.Printf("error occured on file close: %v", err)
-		}
-	}()
-
 	var numbers []int
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		value, err := strconv.Atoi(scanner.Text())
-		if err != nil {
-			return nil, err
+	err := file.ReadFile(filename, func(index int, line string) error {
+		value, err := strconv.Atoi(line)
+		if err == nil {
+			numbers = append(numbers, value)
 		}
-		numbers = append(numbers, value)
-	}
+		return err
+	})
 
-	if err := scanner.Err(); err != nil {
+	if err != nil {
 		return nil, err
 	}
 
