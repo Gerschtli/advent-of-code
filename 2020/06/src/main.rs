@@ -3,6 +3,7 @@
 #[macro_use]
 extern crate hamcrest2;
 
+mod group;
 mod person;
 
 fn main() {}
