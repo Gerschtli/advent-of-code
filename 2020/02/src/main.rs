@@ -12,9 +12,7 @@ use std::str::FromStr;
 use lazy_static::lazy_static;
 use regex::Regex;
 
-use crate::error::AppError;
-
-mod error;
+use error::{AppError, Result};
 
 #[derive(Debug)]
 struct Line {
@@ -24,7 +22,7 @@ struct Line {
     password: String,
 }
 
-fn main() -> Result<(), AppError> {
+fn main() -> Result<()> {
     let (count_sled_rental, count_otca) = count_valid_lines()?;
 
     println!("Result Sled Rental: {:#?}", count_sled_rental);
@@ -33,13 +31,13 @@ fn main() -> Result<(), AppError> {
     Ok(())
 }
 
-fn count_valid_lines() -> Result<(usize, usize), AppError> {
+fn count_valid_lines() -> Result<(usize, usize)> {
     let lines = read_lines("./files/passwords.txt")?;
 
     let line_vec = lines
         .iter()
         .map(|line| parse_line(line))
-        .collect::<Result<Vec<_>, AppError>>()?;
+        .collect::<Result<Vec<_>>>()?;
 
     let count_sled_rental = line_vec
         .iter()
@@ -66,12 +64,12 @@ where
     lines_raw.into_iter().collect()
 }
 
-fn parse_line(line: &str) -> Result<Line, AppError> {
+fn parse_line(line: &str) -> Result<Line> {
     lazy_static! {
         static ref RE: Regex = Regex::new(r"^(\d+)-(\d+) ([a-z]): ([a-z]+)$").unwrap();
     }
 
-    let build_option_error = || AppError::invalid_line(&line);
+    let build_option_error = || AppError::init(format!("invalid line: {}", line));
     let captures = RE.captures(line).ok_or_else(build_option_error)?;
 
     let index_left = captures.get(1).ok_or_else(build_option_error)?;
