@@ -30,12 +30,6 @@ func TestLoadMapReturnsMap(t *testing.T) {
 	}, m)
 }
 
-func TestLoadMapReturnsErrorWhenFileNotFound(t *testing.T) {
-	_, err := loadMap("./files/map_not_found")
-
-	assert.IsType(t, &os.PathError{}, err)
-}
-
 func TestLoadMapReturnsErrorWhenUnknownCharInMap(t *testing.T) {
 	_, err := loadMap("./files/map_unknown_char.txt")
 

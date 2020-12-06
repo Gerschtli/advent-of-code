@@ -1,11 +1,11 @@
 package main
 
 import (
-	"bufio"
 	"errors"
 	"fmt"
 	"log"
-	"os"
+
+	"github.com/Gerschtli/advent-of-code/lib/go/file"
 )
 
 func main() {
@@ -32,24 +32,12 @@ func main() {
 }
 
 func loadMap(filename string) (Map, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		err := file.Close()
-		if err != nil {
-			log.Printf("error occured on file close: %v", err)
-		}
-	}()
-
 	var m Map
-	scanner := bufio.NewScanner(file)
 	var length int
-	for i := 0; scanner.Scan(); i++ {
+	err := file.ReadFile(filename, func(index int, line string) error {
 		m = append(m, []bool{})
 
-		for _, char := range scanner.Text() {
+		for _, char := range line {
 			var isBlocked bool
 
 			switch char {
@@ -58,21 +46,22 @@ func loadMap(filename string) (Map, error) {
 			case '#':
 				isBlocked = true
 			default:
-				return nil, errors.New(fmt.Sprintf("unknown char found: %q", char))
+				return errors.New(fmt.Sprintf("unknown char found: %q", char))
 			}
 
-			m[i] = append(m[i], isBlocked)
+			m[index] = append(m[index], isBlocked)
 		}
 
-		if i == 0 {
-			length = len(m[i])
-		} else if len(m[i]) != length {
-			return nil, errors.New("provided map is not a rectangle")
-
+		if index == 0 {
+			length = len(m[index])
+		} else if len(m[index]) != length {
+			return errors.New("provided map is not a rectangle")
 		}
-	}
 
-	if err := scanner.Err(); err != nil {
+		return nil
+	})
+
+	if err != nil {
 		return nil, err
 	}
 
