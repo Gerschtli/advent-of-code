@@ -1,3 +1,6 @@
+use lazy_static::lazy_static;
+use regex::Regex;
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 struct PassportValue {
     is_present: bool,
@@ -64,45 +67,88 @@ impl Passport {
             && self.pid.is_present
     }
 
-    pub(super) fn with_byr(&self, _value: &str) -> Self {
+    pub(super) fn with_byr(&self, value: &str) -> Self {
+        let valid = Passport::is_valid_year(value, 1920, 2002);
+
         let mut new = self.clone();
-        new.byr = PassportValue::init_present(false);
+        new.byr = PassportValue::init_present(valid);
         new
     }
 
-    pub(super) fn with_iyr(&self, _value: &str) -> Self {
+    pub(super) fn with_iyr(&self, value: &str) -> Self {
+        let valid = Passport::is_valid_year(value, 2010, 2020);
+
         let mut new = self.clone();
-        new.iyr = PassportValue::init_present(false);
+        new.iyr = PassportValue::init_present(valid);
         new
     }
 
-    pub(super) fn with_eyr(&self, _value: &str) -> Self {
+    pub(super) fn with_eyr(&self, value: &str) -> Self {
+        let valid = Passport::is_valid_year(value, 2020, 2030);
+
         let mut new = self.clone();
-        new.eyr = PassportValue::init_present(false);
+        new.eyr = PassportValue::init_present(valid);
         new
     }
 
-    pub(super) fn with_hgt(&self, _value: &str) -> Self {
+    pub(super) fn with_hgt(&self, value: &str) -> Self {
+        lazy_static! {
+            static ref RE: Regex = Regex::new(r"^(\d+)(cm|in)$").unwrap();
+        }
+
+        let valid = match RE.captures(value) {
+            Some(captures) => {
+                let capture_value = captures.get(1);
+                let capture_unit = captures.get(2);
+
+                if capture_value.is_none() || capture_unit.is_none() {
+                    false
+                } else if capture_unit.unwrap().as_str() == "cm" {
+                    Passport::is_in_range(capture_value.unwrap().as_str(), 150, 193)
+                } else {
+                    Passport::is_in_range(capture_value.unwrap().as_str(), 59, 76)
+                }
+            }
+            None => false,
+        };
+
         let mut new = self.clone();
-        new.hgt = PassportValue::init_present(false);
+        new.hgt = PassportValue::init_present(valid);
         new
     }
 
-    pub(super) fn with_hcl(&self, _value: &str) -> Self {
+    pub(super) fn with_hcl(&self, value: &str) -> Self {
+        lazy_static! {
+            static ref RE: Regex = Regex::new(r"^#[\da-f]{6}$").unwrap();
+        }
+
+        let valid = RE.is_match(value);
+
         let mut new = self.clone();
-        new.hcl = PassportValue::init_present(false);
+        new.hcl = PassportValue::init_present(valid);
         new
     }
 
-    pub(super) fn with_ecl(&self, _value: &str) -> Self {
+    pub(super) fn with_ecl(&self, value: &str) -> Self {
+        let valid = match value {
+            "amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth" => true,
+            _ => false,
+        };
+
         let mut new = self.clone();
-        new.ecl = PassportValue::init_present(false);
+        new.ecl = PassportValue::init_present(valid);
         new
     }
 
-    pub(super) fn with_pid(&self, _value: &str) -> Self {
+    pub(super) fn with_pid(&self, value: &str) -> Self {
+        lazy_static! {
+            static ref RE: Regex = Regex::new(r"^\d{9}$").unwrap();
+        }
+
+        let valid = RE.is_match(value);
+
         let mut new = self.clone();
-        new.pid = PassportValue::init_present(false);
+        new.pid = PassportValue::init_present(valid);
         new
     }
 
@@ -110,6 +156,24 @@ impl Passport {
         let mut new = self.clone();
         new.cid = PassportValue::init_present(true);
         new
+    }
+
+    fn is_valid_year(value: &str, min: i32, max: i32) -> bool {
+        lazy_static! {
+            static ref RE: Regex = Regex::new(r"^\d{4}$").unwrap();
+        }
+
+        if !RE.is_match(value) {
+            return false;
+        }
+
+        Passport::is_in_range(value, min, max)
+    }
+
+    fn is_in_range(value: &str, min: i32, max: i32) -> bool {
+        let v = value.parse::<i32>().unwrap();
+
+        min <= v && v <= max
     }
 }
 
@@ -258,5 +322,112 @@ mod tests {
             .has_necessary_properties(),
             eq(false)
         );
+    }
+
+    #[test]
+    fn passport_with_byr_validates_value() {
+        let passport = Passport::new();
+        let value_invalid = PassportValue::init_present(false);
+        let value_valid = PassportValue::init_present(true);
+
+        assert_that!(&passport.with_byr("1919").byr, eq(&value_invalid));
+        assert_that!(&passport.with_byr("1920").byr, eq(&value_valid));
+        assert_that!(&passport.with_byr("2002").byr, eq(&value_valid));
+        assert_that!(&passport.with_byr("2003").byr, eq(&value_invalid));
+        assert_that!(&passport.with_byr("abcd").byr, eq(&value_invalid));
+    }
+
+    #[test]
+    fn passport_with_iyr_validates_value() {
+        let passport = Passport::new();
+        let value_invalid = PassportValue::init_present(false);
+        let value_valid = PassportValue::init_present(true);
+
+        assert_that!(&passport.with_iyr("2009").iyr, eq(&value_invalid));
+        assert_that!(&passport.with_iyr("2010").iyr, eq(&value_valid));
+        assert_that!(&passport.with_iyr("2020").iyr, eq(&value_valid));
+        assert_that!(&passport.with_iyr("2021").iyr, eq(&value_invalid));
+        assert_that!(&passport.with_iyr("abcd").iyr, eq(&value_invalid));
+    }
+
+    #[test]
+    fn passport_with_eyr_validates_value() {
+        let passport = Passport::new();
+        let value_invalid = PassportValue::init_present(false);
+        let value_valid = PassportValue::init_present(true);
+
+        assert_that!(&passport.with_eyr("2019").eyr, eq(&value_invalid));
+        assert_that!(&passport.with_eyr("2020").eyr, eq(&value_valid));
+        assert_that!(&passport.with_eyr("2030").eyr, eq(&value_valid));
+        assert_that!(&passport.with_eyr("2031").eyr, eq(&value_invalid));
+        assert_that!(&passport.with_eyr("abcd").eyr, eq(&value_invalid));
+    }
+
+    #[test]
+    fn passport_with_hgt_validates_value() {
+        let passport = Passport::new();
+        let value_invalid = PassportValue::init_present(false);
+        let value_valid = PassportValue::init_present(true);
+
+        assert_that!(&passport.with_hgt("149cm").hgt, eq(&value_invalid));
+        assert_that!(&passport.with_hgt("150cm").hgt, eq(&value_valid));
+        assert_that!(&passport.with_hgt("193cm").hgt, eq(&value_valid));
+        assert_that!(&passport.with_hgt("194cm").hgt, eq(&value_invalid));
+        assert_that!(&passport.with_hgt("58in").hgt, eq(&value_invalid));
+        assert_that!(&passport.with_hgt("59in").hgt, eq(&value_valid));
+        assert_that!(&passport.with_hgt("76in").hgt, eq(&value_valid));
+        assert_that!(&passport.with_hgt("77in").hgt, eq(&value_invalid));
+        assert_that!(&passport.with_hgt("abcd").hgt, eq(&value_invalid));
+    }
+
+    #[test]
+    fn passport_with_hcl_validates_value() {
+        let passport = Passport::new();
+        let value_invalid = PassportValue::init_present(false);
+        let value_valid = PassportValue::init_present(true);
+
+        assert_that!(&passport.with_hcl("#000000").hcl, eq(&value_valid));
+        assert_that!(&passport.with_hcl("#abcdef").hcl, eq(&value_valid));
+        assert_that!(&passport.with_hcl("#18e6d7").hcl, eq(&value_valid));
+        assert_that!(&passport.with_hcl("#123g45").hcl, eq(&value_invalid));
+        assert_that!(&passport.with_hcl("000000").hcl, eq(&value_invalid));
+    }
+
+    #[test]
+    fn passport_with_ecl_validates_value() {
+        let passport = Passport::new();
+        let value_invalid = PassportValue::init_present(false);
+        let value_valid = PassportValue::init_present(true);
+
+        assert_that!(&passport.with_ecl("amb").ecl, eq(&value_valid));
+        assert_that!(&passport.with_ecl("blu").ecl, eq(&value_valid));
+        assert_that!(&passport.with_ecl("brn").ecl, eq(&value_valid));
+        assert_that!(&passport.with_ecl("gry").ecl, eq(&value_valid));
+        assert_that!(&passport.with_ecl("grn").ecl, eq(&value_valid));
+        assert_that!(&passport.with_ecl("hzl").ecl, eq(&value_valid));
+        assert_that!(&passport.with_ecl("oth").ecl, eq(&value_valid));
+
+        assert_that!(&passport.with_ecl("abc").ecl, eq(&value_invalid));
+    }
+
+    #[test]
+    fn passport_with_pid_validates_value() {
+        let passport = Passport::new();
+        let value_invalid = PassportValue::init_present(false);
+        let value_valid = PassportValue::init_present(true);
+
+        assert_that!(&passport.with_pid("000000000").pid, eq(&value_valid));
+        assert_that!(&passport.with_pid("123456789").pid, eq(&value_valid));
+        assert_that!(&passport.with_pid("000123456").pid, eq(&value_valid));
+        assert_that!(&passport.with_pid("4567").pid, eq(&value_invalid));
+    }
+
+    #[test]
+    fn passport_with_cid_returns_always_valid() {
+        let passport = Passport::new();
+        let value_valid = PassportValue::init_present(true);
+
+        assert_that!(&passport.with_cid("123").cid, eq(&value_valid));
+        assert_that!(&passport.with_cid("").cid, eq(&value_valid));
     }
 }
