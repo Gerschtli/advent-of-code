@@ -1,8 +1,18 @@
 package main
 
-import "github.com/Gerschtli/advent-of-code/lib/go/file"
+import (
+	"log"
+
+	"github.com/Gerschtli/advent-of-code/lib/go/file"
+)
 
 func main() {
+	seats, err := readSeats("./files/seats.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Printf("highest seat id: %d", getHighestId(seats))
 }
 
 func readSeats(filename string) ([]seat, error) {
@@ -23,4 +33,17 @@ func readSeats(filename string) ([]seat, error) {
 	}
 
 	return seats, nil
+}
+
+func getHighestId(seats []seat) int {
+	var highestId int
+	for _, s := range seats {
+		id := s.id()
+
+		if id > highestId {
+			highestId = id
+		}
+	}
+
+	return highestId
 }

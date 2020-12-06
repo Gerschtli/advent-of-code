@@ -18,8 +18,9 @@ func TestMainLogsResults(t *testing.T) {
 
 	lines := strings.Split(buf.String(), "\n")
 
-	assert.Len(t, lines, 1)
-	assert.Empty(t, lines[0])
+	assert.Len(t, lines, 2)
+	assert.Contains(t, lines[0], "highest seat id: 944")
+	assert.Empty(t, lines[1])
 }
 
 func TestReadSeatsReturnsSliceOfSeats(t *testing.T) {
@@ -39,4 +40,15 @@ func TestReadSeatsReturnsErrorForInvalidInput(t *testing.T) {
 	if assert.NotNil(t, err) {
 		assert.Equal(t, "code invalid: need 10 chars [FFFBBBFRR]", err.Error())
 	}
+}
+
+func TestGetHighestSeatIdReturnsId(t *testing.T) {
+	seats := []seat{
+		{0, 0},
+		{1, 0},
+		{1, 2},
+		{0, 1},
+	}
+
+	assert.Equal(t, 10, getHighestId(seats))
 }
