@@ -5,6 +5,8 @@ name = "advent-of-code-2020-04"
 version = "0.1.0"
 dependencies = [
  "hamcrest2",
+ "lazy_static",
+ "regex",
 ]
 
 [[package]]
