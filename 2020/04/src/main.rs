@@ -14,9 +14,12 @@ mod error;
 mod passport;
 
 fn main() -> Result<()> {
-    let count = count_passports()?;
+    let count_with_necessary_properties = count_passports()?;
 
-    println!("Count of valid passports: {}", count);
+    println!(
+        "Count of passports with necessary properties: {}",
+        count_with_necessary_properties
+    );
 
     Ok(())
 }
@@ -25,7 +28,12 @@ fn count_passports() -> Result<usize> {
     let lines = read_lines("./files/passports.txt")?;
     let passports = parse_lines(&lines)?;
 
-    Ok(passports.iter().filter(|p| p.is_valid()).count())
+    let count_with_necessary_properties = passports
+        .iter()
+        .filter(|p| p.has_necessary_properties())
+        .count();
+
+    Ok(count_with_necessary_properties)
 }
 
 fn read_lines<P>(filename: P) -> io::Result<Vec<String>>

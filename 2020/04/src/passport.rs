@@ -1,86 +1,114 @@
 #[derive(Clone, Debug, Eq, PartialEq)]
+struct PassportValue {
+    is_present: bool,
+    is_valid: bool,
+}
+
+impl PassportValue {
+    fn new() -> Self {
+        PassportValue {
+            is_present: false,
+            is_valid: false,
+        }
+    }
+
+    fn init_present() -> Self {
+        PassportValue {
+            is_present: true,
+            is_valid: false,
+        }
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
 pub(super) struct Passport {
     /// Birth Year
-    byr: bool,
+    byr: PassportValue,
     /// Issue Year
-    iyr: bool,
+    iyr: PassportValue,
     /// Expiration Year
-    eyr: bool,
+    eyr: PassportValue,
     /// Height
-    hgt: bool,
+    hgt: PassportValue,
     /// Hair Color
-    hcl: bool,
+    hcl: PassportValue,
     /// Eye Color
-    ecl: bool,
+    ecl: PassportValue,
     /// Passport ID
-    pid: bool,
+    pid: PassportValue,
     /// Country ID
-    cid: bool,
+    cid: PassportValue,
 }
 
 impl Passport {
     pub(super) fn new() -> Self {
         Passport {
-            byr: false,
-            iyr: false,
-            eyr: false,
-            hgt: false,
-            hcl: false,
-            ecl: false,
-            pid: false,
-            cid: false,
+            byr: PassportValue::new(),
+            iyr: PassportValue::new(),
+            eyr: PassportValue::new(),
+            hgt: PassportValue::new(),
+            hcl: PassportValue::new(),
+            ecl: PassportValue::new(),
+            pid: PassportValue::new(),
+            cid: PassportValue::new(),
         }
     }
 
-    pub(super) fn is_valid(&self) -> bool {
-        self.byr && self.iyr && self.eyr && self.hgt && self.hcl && self.ecl && self.pid
+    pub(super) fn has_necessary_properties(&self) -> bool {
+        self.byr.is_present
+            && self.iyr.is_present
+            && self.eyr.is_present
+            && self.hgt.is_present
+            && self.hcl.is_present
+            && self.ecl.is_present
+            && self.pid.is_present
     }
 
-    pub(super) fn with_byr(&self, value: &str) -> Self {
+    pub(super) fn with_byr(&self, _value: &str) -> Self {
         let mut new = self.clone();
-        new.byr = !value.is_empty();
+        new.byr = PassportValue::init_present();
         new
     }
 
-    pub(super) fn with_iyr(&self, value: &str) -> Self {
+    pub(super) fn with_iyr(&self, _value: &str) -> Self {
         let mut new = self.clone();
-        new.iyr = !value.is_empty();
+        new.iyr = PassportValue::init_present();
         new
     }
 
-    pub(super) fn with_eyr(&self, value: &str) -> Self {
+    pub(super) fn with_eyr(&self, _value: &str) -> Self {
         let mut new = self.clone();
-        new.eyr = !value.is_empty();
+        new.eyr = PassportValue::init_present();
         new
     }
 
-    pub(super) fn with_hgt(&self, value: &str) -> Self {
+    pub(super) fn with_hgt(&self, _value: &str) -> Self {
         let mut new = self.clone();
-        new.hgt = !value.is_empty();
+        new.hgt = PassportValue::init_present();
         new
     }
 
-    pub(super) fn with_hcl(&self, value: &str) -> Self {
+    pub(super) fn with_hcl(&self, _value: &str) -> Self {
         let mut new = self.clone();
-        new.hcl = !value.is_empty();
+        new.hcl = PassportValue::init_present();
         new
     }
 
-    pub(super) fn with_ecl(&self, value: &str) -> Self {
+    pub(super) fn with_ecl(&self, _value: &str) -> Self {
         let mut new = self.clone();
-        new.ecl = !value.is_empty();
+        new.ecl = PassportValue::init_present();
         new
     }
 
-    pub(super) fn with_pid(&self, value: &str) -> Self {
+    pub(super) fn with_pid(&self, _value: &str) -> Self {
         let mut new = self.clone();
-        new.pid = !value.is_empty();
+        new.pid = PassportValue::init_present();
         new
     }
 
-    pub(super) fn with_cid(&self, value: &str) -> Self {
+    pub(super) fn with_cid(&self, _value: &str) -> Self {
         let mut new = self.clone();
-        new.cid = !value.is_empty();
+        new.cid = PassportValue::init_present();
         new
     }
 }
@@ -92,61 +120,61 @@ mod tests {
     use super::*;
 
     #[test]
-    fn passport_is_valid_needs_every_value_except_cid() {
+    fn passport_has_necessary_properties_needs_every_value_except_cid() {
         assert_that!(
             Passport {
-                byr: true,
-                iyr: true,
-                eyr: true,
-                hgt: true,
-                hcl: true,
-                ecl: true,
-                pid: true,
-                cid: true,
+                byr: PassportValue::init_present(),
+                iyr: PassportValue::init_present(),
+                eyr: PassportValue::init_present(),
+                hgt: PassportValue::init_present(),
+                hcl: PassportValue::init_present(),
+                ecl: PassportValue::init_present(),
+                pid: PassportValue::init_present(),
+                cid: PassportValue::init_present(),
             }
-            .is_valid(),
+            .has_necessary_properties(),
             eq(true)
         );
         assert_that!(
             Passport {
-                byr: true,
-                iyr: true,
-                eyr: true,
-                hgt: false,
-                hcl: true,
-                ecl: true,
-                pid: true,
-                cid: true,
+                byr: PassportValue::init_present(),
+                iyr: PassportValue::init_present(),
+                eyr: PassportValue::init_present(),
+                hgt: PassportValue::new(),
+                hcl: PassportValue::init_present(),
+                ecl: PassportValue::init_present(),
+                pid: PassportValue::init_present(),
+                cid: PassportValue::init_present(),
             }
-            .is_valid(),
+            .has_necessary_properties(),
             eq(false)
         );
         assert_that!(
             Passport {
-                byr: true,
-                iyr: true,
-                eyr: true,
-                hgt: true,
-                hcl: true,
-                ecl: true,
-                pid: true,
-                cid: false,
+                byr: PassportValue::init_present(),
+                iyr: PassportValue::init_present(),
+                eyr: PassportValue::init_present(),
+                hgt: PassportValue::init_present(),
+                hcl: PassportValue::init_present(),
+                ecl: PassportValue::init_present(),
+                pid: PassportValue::init_present(),
+                cid: PassportValue::new(),
             }
-            .is_valid(),
+            .has_necessary_properties(),
             eq(true)
         );
         assert_that!(
             Passport {
-                byr: false,
-                iyr: true,
-                eyr: true,
-                hgt: true,
-                hcl: true,
-                ecl: true,
-                pid: true,
-                cid: false,
+                byr: PassportValue::new(),
+                iyr: PassportValue::init_present(),
+                eyr: PassportValue::init_present(),
+                hgt: PassportValue::init_present(),
+                hcl: PassportValue::init_present(),
+                ecl: PassportValue::init_present(),
+                pid: PassportValue::init_present(),
+                cid: PassportValue::new(),
             }
-            .is_valid(),
+            .has_necessary_properties(),
             eq(false)
         );
     }
