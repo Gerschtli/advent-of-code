@@ -18,6 +18,10 @@ impl Group {
     pub(super) fn get_answer_count(&self) -> usize {
         Person::get_answer_count(&self.persons)
     }
+
+    pub(super) fn get_answer_intersection_count(&self) -> usize {
+        Person::get_answer_intersection_count(&self.persons)
+    }
 }
 
 #[cfg(test)]
@@ -54,5 +58,15 @@ mod tests {
         ]);
 
         assert_that!(count, eq(3))
+    }
+
+    #[test]
+    fn group_get_answer_intersection_count_returns_count_of_all_answer_intersections() {
+        let count = Person::get_answer_intersection_count(&vec![
+            Person::init(vec!['a', 'b']),
+            Person::init(vec!['b', 'c']),
+        ]);
+
+        assert_that!(count, eq(1))
     }
 }

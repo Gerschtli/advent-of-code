@@ -41,6 +41,17 @@ impl Person {
 
         answers.len()
     }
+
+    pub(super) fn get_answer_intersection_count(persons: &[Person]) -> usize {
+        if persons.len() == 0 {
+            return 0;
+        }
+
+        let f = |acc: HashSet<_>, p: &Person| acc.intersection(&p.answers).cloned().collect();
+        let answers = persons.iter().fold(persons[0].answers.clone(), f);
+
+        answers.len()
+    }
 }
 
 #[cfg(test)]
@@ -104,5 +115,35 @@ mod tests {
         ]);
 
         assert_that!(count, eq(3))
+    }
+
+    #[test]
+    fn get_answer_intersection_count_returns_count_of_all_answer_intersections() {
+        let count = Person::get_answer_intersection_count(&vec![
+            Person {
+                answers: vec!['a', 'b'].into_iter().collect(),
+            },
+            Person {
+                answers: vec!['b', 'c'].into_iter().collect(),
+            },
+        ]);
+
+        assert_that!(count, eq(1))
+    }
+
+    #[test]
+    fn get_answer_intersection_count_returns_count_answers_when_only_one_person() {
+        let count = Person::get_answer_intersection_count(&vec![Person {
+            answers: vec!['a', 'b'].into_iter().collect(),
+        }]);
+
+        assert_that!(count, eq(2))
+    }
+
+    #[test]
+    fn get_answer_intersection_count_returns_0_with_empty_input() {
+        let count = Person::get_answer_intersection_count(&vec![]);
+
+        assert_that!(count, eq(0))
     }
 }
