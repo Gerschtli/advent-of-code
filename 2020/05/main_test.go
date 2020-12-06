@@ -18,9 +18,10 @@ func TestMainLogsResults(t *testing.T) {
 
 	lines := strings.Split(buf.String(), "\n")
 
-	assert.Len(t, lines, 2)
+	assert.Len(t, lines, 3)
 	assert.Contains(t, lines[0], "highest seat id: 944")
-	assert.Empty(t, lines[1])
+	assert.Contains(t, lines[1], "free seat id: 554")
+	assert.Empty(t, lines[2])
 }
 
 func TestReadSeatsReturnsSliceOfSeats(t *testing.T) {

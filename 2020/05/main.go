@@ -13,6 +13,7 @@ func main() {
 	}
 
 	log.Printf("highest seat id: %d", getHighestId(seats))
+	log.Printf("free seat id: %d", getFreeSeat(seats)[0].id())
 }
 
 func readSeats(filename string) ([]seat, error) {
@@ -46,4 +47,18 @@ func getHighestId(seats []seat) int {
 	}
 
 	return highestId
+}
+
+func getFreeSeat(seats []seat) []seat {
+	p := buildPlane(128, 8)
+	for _, s := range seats {
+		p.markSeatTaken(&s)
+	}
+
+	p.shrinkPlaneSize()
+
+	// "Your seat wasn't at the very front or back"
+	p.markFrontAndBackRowTaken()
+
+	return p.getFreeSeats()
 }
