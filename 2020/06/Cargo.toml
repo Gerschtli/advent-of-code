@@ -1,0 +1,12 @@
+[package]
+name = "advent-of-code-2020-06"
+version = "0.1.0"
+authors = ["Tobias Happ <tobias.happ@gmx.de>"]
+edition = "2018"
+
+[dependencies]
+error = { path = "../../lib/rust/error" }
+file = { path = "../../lib/rust/file" }
+
+[dev-dependencies]
+hamcrest2 = "0.3.0"

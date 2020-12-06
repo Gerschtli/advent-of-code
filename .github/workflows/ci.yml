@@ -52,6 +52,7 @@ jobs:
           - lib/rust/file
           - 2020/02
           - 2020/04
+          - 2020/06
 
     steps:
       - name: Checkout code
