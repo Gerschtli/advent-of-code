@@ -29,7 +29,7 @@ mod tests {
 
     #[test]
     fn group_with_person_adds_person_to_list() {
-        let person = Person::build_from_string("a").unwrap();
+        let person = Person::init(vec!['a']);
         let group = Group { persons: vec![] };
 
         let group_new = group.with_person(person.clone());

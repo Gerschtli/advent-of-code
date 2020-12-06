@@ -24,6 +24,13 @@ impl Person {
 
         Ok(Person { answers })
     }
+
+    #[cfg(test)]
+    pub(super) fn init(answers: Vec<char>) -> Self {
+        Person {
+            answers: answers.into_iter().collect(),
+        }
+    }
 }
 
 #[cfg(test)]
@@ -63,5 +70,15 @@ mod tests {
             format!("{}", person.unwrap_err()),
             eq("app error: empty answers entry")
         );
+    }
+
+    #[test]
+    fn person_init_builds_person_with_answers() {
+        let person = Person::init(vec!['a', 'b']);
+        let mut answers = HashSet::new();
+        answers.insert('a');
+        answers.insert('b');
+
+        assert_that!(person, eq(Person { answers }))
     }
 }
