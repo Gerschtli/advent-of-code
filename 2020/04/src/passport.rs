@@ -1,26 +1,87 @@
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub(super) struct Passport {
     /// Birth Year
-    pub(super) byr: bool,
+    byr: bool,
     /// Issue Year
-    pub(super) iyr: bool,
+    iyr: bool,
     /// Expiration Year
-    pub(super) eyr: bool,
+    eyr: bool,
     /// Height
-    pub(super) hgt: bool,
+    hgt: bool,
     /// Hair Color
-    pub(super) hcl: bool,
+    hcl: bool,
     /// Eye Color
-    pub(super) ecl: bool,
+    ecl: bool,
     /// Passport ID
-    pub(super) pid: bool,
+    pid: bool,
     /// Country ID
-    pub(super) cid: bool,
+    cid: bool,
 }
 
 impl Passport {
+    pub(super) fn new() -> Self {
+        Passport {
+            byr: false,
+            iyr: false,
+            eyr: false,
+            hgt: false,
+            hcl: false,
+            ecl: false,
+            pid: false,
+            cid: false,
+        }
+    }
+
     pub(super) fn is_valid(&self) -> bool {
         self.byr && self.iyr && self.eyr && self.hgt && self.hcl && self.ecl && self.pid
+    }
+
+    pub(super) fn with_byr(&self, value: &str) -> Self {
+        let mut new = self.clone();
+        new.byr = !value.is_empty();
+        new
+    }
+
+    pub(super) fn with_iyr(&self, value: &str) -> Self {
+        let mut new = self.clone();
+        new.iyr = !value.is_empty();
+        new
+    }
+
+    pub(super) fn with_eyr(&self, value: &str) -> Self {
+        let mut new = self.clone();
+        new.eyr = !value.is_empty();
+        new
+    }
+
+    pub(super) fn with_hgt(&self, value: &str) -> Self {
+        let mut new = self.clone();
+        new.hgt = !value.is_empty();
+        new
+    }
+
+    pub(super) fn with_hcl(&self, value: &str) -> Self {
+        let mut new = self.clone();
+        new.hcl = !value.is_empty();
+        new
+    }
+
+    pub(super) fn with_ecl(&self, value: &str) -> Self {
+        let mut new = self.clone();
+        new.ecl = !value.is_empty();
+        new
+    }
+
+    pub(super) fn with_pid(&self, value: &str) -> Self {
+        let mut new = self.clone();
+        new.pid = !value.is_empty();
+        new
+    }
+
+    pub(super) fn with_cid(&self, value: &str) -> Self {
+        let mut new = self.clone();
+        new.cid = !value.is_empty();
+        new
     }
 }
 

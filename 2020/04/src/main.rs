@@ -57,35 +57,28 @@ fn parse_lines(lines: &[String]) -> Result<Vec<Passport>> {
 }
 
 fn build_passport(data: &[&str]) -> Result<Passport> {
-    let mut passport = Passport {
-        byr: false,
-        iyr: false,
-        eyr: false,
-        hgt: false,
-        hcl: false,
-        ecl: false,
-        pid: false,
-        cid: false,
-    };
+    let mut passport = Passport::new();
 
     for datum in data {
-        let key = datum.split(':').next();
+        let mut split = datum.split(':');
+        let key = split.next();
+        let value = split.next();
 
-        if key.is_none() {
+        if key.is_none() || value.is_none() {
             return Err(AppError::init(&format!("invalid password data: {}", datum)));
         }
 
-        match key.unwrap() {
-            "byr" => passport.byr = true,
-            "iyr" => passport.iyr = true,
-            "eyr" => passport.eyr = true,
-            "hgt" => passport.hgt = true,
-            "hcl" => passport.hcl = true,
-            "ecl" => passport.ecl = true,
-            "pid" => passport.pid = true,
-            "cid" => passport.cid = true,
+        passport = match key.unwrap() {
+            "byr" => passport.with_byr(value.unwrap()),
+            "iyr" => passport.with_iyr(value.unwrap()),
+            "eyr" => passport.with_eyr(value.unwrap()),
+            "hgt" => passport.with_hgt(value.unwrap()),
+            "hcl" => passport.with_hcl(value.unwrap()),
+            "ecl" => passport.with_ecl(value.unwrap()),
+            "pid" => passport.with_pid(value.unwrap()),
+            "cid" => passport.with_cid(value.unwrap()),
             _ => return Err(AppError::init(&format!("invalid password data: {}", datum))),
-        }
+        };
     }
 
     Ok(passport)
@@ -138,26 +131,23 @@ mod tests {
         assert_that!(&passports, ok());
 
         let expected = vec![
-            Passport {
-                byr: true,
-                iyr: true,
-                eyr: true,
-                hgt: true,
-                hcl: true,
-                ecl: true,
-                pid: true,
-                cid: true,
-            },
-            Passport {
-                byr: true,
-                iyr: true,
-                eyr: true,
-                hgt: false,
-                hcl: true,
-                ecl: true,
-                pid: true,
-                cid: true,
-            },
+            Passport::new()
+                .with_byr("1937")
+                .with_iyr("2017")
+                .with_eyr("2020")
+                .with_hgt("183cm")
+                .with_hcl("#fffffd")
+                .with_ecl("gry")
+                .with_pid("860033327")
+                .with_cid("147"),
+            Passport::new()
+                .with_byr("1929")
+                .with_iyr("2013")
+                .with_eyr("2023")
+                .with_hcl("#cfa07d")
+                .with_ecl("amb")
+                .with_pid("028048884")
+                .with_cid("350"),
         ];
 
         assert_that!(&passports.unwrap(), contains(expected).exactly());
