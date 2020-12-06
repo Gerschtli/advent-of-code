@@ -31,6 +31,16 @@ impl Person {
             answers: answers.into_iter().collect(),
         }
     }
+
+    pub(super) fn get_answer_count(persons: &[Person]) -> usize {
+        let answers = persons
+            .iter()
+            .map(|p| &p.answers)
+            .flatten()
+            .collect::<HashSet<_>>();
+
+        answers.len()
+    }
 }
 
 #[cfg(test)]
@@ -80,5 +90,19 @@ mod tests {
         answers.insert('b');
 
         assert_that!(person, eq(Person { answers }))
+    }
+
+    #[test]
+    fn get_answer_count_returns_count_of_all_answers() {
+        let count = Person::get_answer_count(&vec![
+            Person {
+                answers: vec!['a', 'b'].into_iter().collect(),
+            },
+            Person {
+                answers: vec!['b', 'c'].into_iter().collect(),
+            },
+        ]);
+
+        assert_that!(count, eq(3))
     }
 }

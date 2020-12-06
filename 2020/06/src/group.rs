@@ -14,6 +14,10 @@ impl Group {
         self.persons.push(person);
         self
     }
+
+    pub(super) fn get_answer_count(&self) -> usize {
+        Person::get_answer_count(&self.persons)
+    }
 }
 
 #[cfg(test)]
@@ -40,5 +44,15 @@ mod tests {
                 persons: vec![person]
             })
         )
+    }
+
+    #[test]
+    fn group_get_answer_count_returns_count_of_all_answers() {
+        let count = Person::get_answer_count(&vec![
+            Person::init(vec!['a', 'b']),
+            Person::init(vec!['b', 'c']),
+        ]);
+
+        assert_that!(count, eq(3))
     }
 }
