@@ -6,11 +6,10 @@ extern crate hamcrest2;
 use std::io::BufRead;
 use std::{fs, io, path};
 
-use crate::error::AppError;
-use crate::error::Result;
+use error::{AppError, Result};
+
 use crate::passport::Passport;
 
-mod error;
 mod passport;
 
 fn main() -> Result<()> {
@@ -76,7 +75,7 @@ fn build_passport(data: &[&str]) -> Result<Passport> {
         let value = split.next();
 
         if key.is_none() || value.is_none() {
-            return Err(AppError::init(&format!("invalid password data: {}", datum)));
+            return Err(AppError::init(format!("invalid password data: {}", datum)));
         }
 
         passport = match key.unwrap() {
@@ -88,7 +87,7 @@ fn build_passport(data: &[&str]) -> Result<Passport> {
             "ecl" => passport.with_ecl(value.unwrap()),
             "pid" => passport.with_pid(value.unwrap()),
             "cid" => passport.with_cid(value.unwrap()),
-            _ => return Err(AppError::init(&format!("invalid password data: {}", datum))),
+            _ => return Err(AppError::init(format!("invalid password data: {}", datum))),
         };
     }
 
