@@ -4,6 +4,7 @@
 extern crate hamcrest2;
 
 use error::Result;
+use file::read_lines;
 
 use crate::group::Group;
 use crate::person::Person;
@@ -11,7 +12,22 @@ use crate::person::Person;
 mod group;
 mod person;
 
-fn main() {}
+fn main() -> Result<()> {
+    let sum = get_sum_of_all_answers()?;
+
+    println!("sum: {}", sum);
+
+    Ok(())
+}
+
+fn get_sum_of_all_answers() -> Result<usize> {
+    let lines = read_lines("./files/answers.txt")?;
+    let groups = parse_lines(&lines)?;
+
+    let sum_of_all_answers = groups.iter().map(|g| g.get_answer_count()).sum();
+
+    Ok(sum_of_all_answers)
+}
 
 fn parse_lines(lines: &[String]) -> Result<Vec<Group>> {
     let mut groups = vec![];
@@ -44,6 +60,13 @@ mod tests {
     use crate::person::Person;
 
     use super::*;
+
+    #[test]
+    fn get_sum_of_all_answers_returns_sum() {
+        let sum = get_sum_of_all_answers();
+
+        assert_that!(sum, has(7110));
+    }
 
     #[test]
     fn parse_lines_returns_list_of_groups() {
