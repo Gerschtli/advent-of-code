@@ -13,20 +13,25 @@ mod group;
 mod person;
 
 fn main() -> Result<()> {
-    let sum = get_sum_of_all_answers()?;
+    let (sum_all, sum_intersections) = get_sum_of_all_answers()?;
 
-    println!("sum: {}", sum);
+    println!("sum for 'any' matches: {}", sum_all);
+    println!("sum for 'all' matches: {}", sum_intersections);
 
     Ok(())
 }
 
-fn get_sum_of_all_answers() -> Result<usize> {
+fn get_sum_of_all_answers() -> Result<(usize, usize)> {
     let lines = read_lines("./files/answers.txt")?;
     let groups = parse_lines(&lines)?;
 
     let sum_of_all_answers = groups.iter().map(|g| g.get_answer_count()).sum();
+    let sum_of_all_intersections = groups
+        .iter()
+        .map(|g| g.get_answer_intersection_count())
+        .sum();
 
-    Ok(sum_of_all_answers)
+    Ok((sum_of_all_answers, sum_of_all_intersections))
 }
 
 fn parse_lines(lines: &[String]) -> Result<Vec<Group>> {
@@ -62,10 +67,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn get_sum_of_all_answers_returns_sum() {
+    fn get_sum_of_all_answers_returns_sums() {
         let sum = get_sum_of_all_answers();
 
-        assert_that!(sum, has(7110));
+        assert_that!(sum, has((7110, 3628)));
     }
 
     #[test]
