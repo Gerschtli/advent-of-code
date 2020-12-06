@@ -67,6 +67,16 @@ impl Passport {
             && self.pid.is_present
     }
 
+    pub(super) fn is_valid(&self) -> bool {
+        self.byr.is_valid
+            && self.iyr.is_valid
+            && self.eyr.is_valid
+            && self.hgt.is_valid
+            && self.hcl.is_valid
+            && self.ecl.is_valid
+            && self.pid.is_valid
+    }
+
     pub(super) fn with_byr(&self, value: &str) -> Self {
         let valid = Passport::is_valid_year(value, 1920, 2002);
 
@@ -320,6 +330,66 @@ mod tests {
                 cid: PassportValue::new(),
             }
             .has_necessary_properties(),
+            eq(false)
+        );
+    }
+
+    #[test]
+    fn passport_is_valid_needs_every_value_to_be_valid_except_cid() {
+        assert_that!(
+            Passport {
+                byr: PassportValue::init_present(true),
+                iyr: PassportValue::init_present(true),
+                eyr: PassportValue::init_present(true),
+                hgt: PassportValue::init_present(true),
+                hcl: PassportValue::init_present(true),
+                ecl: PassportValue::init_present(true),
+                pid: PassportValue::init_present(true),
+                cid: PassportValue::init_present(true),
+            }
+            .is_valid(),
+            eq(true)
+        );
+        assert_that!(
+            Passport {
+                byr: PassportValue::init_present(true),
+                iyr: PassportValue::init_present(true),
+                eyr: PassportValue::init_present(false),
+                hgt: PassportValue::init_present(true),
+                hcl: PassportValue::init_present(true),
+                ecl: PassportValue::init_present(true),
+                pid: PassportValue::init_present(true),
+                cid: PassportValue::init_present(true),
+            }
+            .is_valid(),
+            eq(false)
+        );
+        assert_that!(
+            Passport {
+                byr: PassportValue::init_present(true),
+                iyr: PassportValue::init_present(true),
+                eyr: PassportValue::init_present(true),
+                hgt: PassportValue::init_present(true),
+                hcl: PassportValue::init_present(true),
+                ecl: PassportValue::init_present(true),
+                pid: PassportValue::init_present(true),
+                cid: PassportValue::init_present(false),
+            }
+            .is_valid(),
+            eq(true)
+        );
+        assert_that!(
+            Passport {
+                byr: PassportValue::init_present(false),
+                iyr: PassportValue::init_present(true),
+                eyr: PassportValue::init_present(true),
+                hgt: PassportValue::init_present(true),
+                hcl: PassportValue::init_present(true),
+                ecl: PassportValue::init_present(true),
+                pid: PassportValue::init_present(true),
+                cid: PassportValue::init_present(false),
+            }
+            .is_valid(),
             eq(false)
         );
     }
