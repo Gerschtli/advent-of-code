@@ -3,10 +3,8 @@
 #[macro_use]
 extern crate hamcrest2;
 
-use std::io::BufRead;
-use std::{fs, io, path};
-
 use error::{AppError, Result};
+use file::read_lines;
 
 use crate::passport::Passport;
 
@@ -36,16 +34,6 @@ fn count_passports() -> Result<(usize, usize)> {
     let count_valid = passports.iter().filter(|p| p.is_valid()).count();
 
     Ok((count_with_necessary_properties, count_valid))
-}
-
-fn read_lines<P>(filename: P) -> io::Result<Vec<String>>
-where
-    P: AsRef<path::Path>,
-{
-    let file = fs::File::open(filename)?;
-    let lines_raw = io::BufReader::new(file).lines();
-
-    lines_raw.into_iter().collect()
 }
 
 fn parse_lines(lines: &[String]) -> Result<Vec<Passport>> {
@@ -103,27 +91,6 @@ mod tests {
     #[test]
     fn count_passports_returns_counts() {
         assert_that!(count_passports(), has((202, 137)));
-    }
-
-    #[test]
-    fn read_lines_returns_every_line_from_file() {
-        let lines = read_lines("./files/example.txt");
-
-        assert_that!(
-            lines,
-            has(vec![
-                "ecl:gry pid:860033327 eyr:2020 hcl:#fffffd".to_string(),
-                "".to_string(),
-                "byr:1937 iyr:2017 cid:147 hgt:183cm".to_string(),
-            ])
-        );
-    }
-
-    #[test]
-    fn read_lines_returns_error_when_file_not_found() {
-        let lines = read_lines("./files/example_not_found.txt");
-
-        assert_that!(lines, err());
     }
 
     #[test]

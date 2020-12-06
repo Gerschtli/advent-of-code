@@ -8,6 +8,7 @@ edition = "2018"
 regex = "1.4.2"
 lazy_static = "1.4.0"
 error = { path = "../../lib/rust/error" }
+file = { path = "../../lib/rust/file" }
 
 [dev-dependencies]
 hamcrest2 = "0.3.0"
