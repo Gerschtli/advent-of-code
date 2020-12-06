@@ -3,16 +3,13 @@
 #[macro_use]
 extern crate hamcrest2;
 
-use std::fs;
-use std::io;
-use std::io::BufRead;
-use std::path;
 use std::str::FromStr;
 
 use lazy_static::lazy_static;
 use regex::Regex;
 
 use error::{AppError, Result};
+use file::read_lines;
 
 #[derive(Debug)]
 struct Line {
@@ -52,16 +49,6 @@ fn count_valid_lines() -> Result<(usize, usize)> {
         .count();
 
     Ok((count_sled_rental, count_otca))
-}
-
-fn read_lines<P>(filename: P) -> io::Result<Vec<String>>
-where
-    P: AsRef<path::Path>,
-{
-    let file = fs::File::open(filename)?;
-    let lines_raw = io::BufReader::new(file).lines();
-
-    lines_raw.into_iter().collect()
 }
 
 fn parse_line(line: &str) -> Result<Line> {
@@ -114,27 +101,6 @@ mod tests {
         let count = count_valid_lines();
 
         assert_that!(count, has((600, 245)))
-    }
-
-    #[test]
-    fn read_lines_returns_every_line_from_file() {
-        let lines = read_lines("./files/example.txt");
-
-        assert_that!(
-            lines,
-            has(vec![
-                "abc".to_string(),
-                "bcd".to_string(),
-                "cde".to_string()
-            ])
-        );
-    }
-
-    #[test]
-    fn read_lines_returns_error_when_file_not_found() {
-        let lines = read_lines("./files/example_not_found.txt");
-
-        assert_that!(lines, err());
     }
 
     #[test]
