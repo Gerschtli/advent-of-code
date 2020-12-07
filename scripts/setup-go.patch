@@ -1,0 +1,53 @@
+diff --git a/YEAR/DAY/go.mod b/YEAR/DAY/go.mod
+new file mode 100644
+index 0000000..6b39cd6
+--- /dev/null
++++ b/YEAR/DAY/go.mod
+@@ -0,0 +1,8 @@
++module github.com/Gerschtli/advent-of-code/YEAR/DAY
++
++go 1.15
++
++replace github.com/Gerschtli/advent-of-code/lib/go/file => ../../lib/go/file
++
++require github.com/stretchr/testify v1.6.1
++require github.com/Gerschtli/advent-of-code/lib/go/file v0.1.0
+diff --git a/YEAR/DAY/main.go b/YEAR/DAY/main.go
+new file mode 100644
+index 0000000..da29a2c
+--- /dev/null
++++ b/YEAR/DAY/main.go
+@@ -0,0 +1,4 @@
++package main
++
++func main() {
++}
+diff --git a/YEAR/DAY/main_test.go b/YEAR/DAY/main_test.go
+new file mode 100644
+index 0000000..9b23f30
+--- /dev/null
++++ b/YEAR/DAY/main_test.go
+@@ -0,0 +1,23 @@
++package main
++
++import (
++	"bytes"
++	"log"
++	"os"
++	"strings"
++	"testing"
++
++	"github.com/stretchr/testify/assert"
++)
++
++func TestMainLogsResults(t *testing.T) {
++	var buf bytes.Buffer
++	log.SetOutput(&buf)
++	main()
++	log.SetOutput(os.Stdout)
++
++	lines := strings.Split(buf.String(), "\n")
++
++	assert.Len(t, lines, 1)
++	assert.Empty(t, lines[0])
++}
