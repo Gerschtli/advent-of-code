@@ -9,7 +9,11 @@ import (
 
 var rulesRegex = regexp.MustCompile(`(\w+ \w+) bags?`)
 
-type rules map[color][]color
+type bagRule struct {
+	c     color
+	count int
+}
+type rules map[color][]bagRule
 type containable map[color][]color
 type color string
 
@@ -26,19 +30,19 @@ func main() {
 }
 
 func readRules(filename string) (rules, error) {
-	ruleSet := rules(map[color][]color{})
+	ruleSet := rules(map[color][]bagRule{})
 
 	err := file.ReadFile(filename, func(index int, line string) error {
 		matches := rulesRegex.FindAllStringSubmatch(line, -1)
 		key := color(matches[0][1])
-		ruleSet[key] = []color{}
+		ruleSet[key] = []bagRule{}
 
 		for _, match := range matches[1:] {
 			if match[1] == "no other" {
 				continue
 			}
 
-			ruleSet[key] = append(ruleSet[key], color(match[1]))
+			ruleSet[key] = append(ruleSet[key], bagRule{c: color(match[1])})
 		}
 
 		return nil
@@ -56,7 +60,7 @@ func transposeRules(ruleSet *rules) containable {
 
 	for key, values := range *ruleSet {
 		for _, value := range values {
-			containableMap[value] = append(containableMap[value], key)
+			containableMap[value.c] = append(containableMap[value.c], key)
 		}
 	}
 
