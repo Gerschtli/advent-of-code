@@ -28,6 +28,10 @@ func main() {
 	bagColorsForShinyGold := getTransitiveContainableForColor(&containableMap, "shiny gold")
 
 	log.Printf("%d bag colors can contain shiny gold", len(bagColorsForShinyGold))
+
+	bagCountShinyGold := getBagCount(&ruleSet, "shiny gold")
+
+	log.Printf("%d bags are required to be in shiny gold", bagCountShinyGold)
 }
 
 func readRules(filename string) (rules, error) {
@@ -83,4 +87,19 @@ func getTransitiveContainableForColor(containableMap *containable, c color) map[
 	}
 
 	return colors
+}
+
+func getBagCount(ruleSet *rules, c color) int {
+	bagRules, ok := (*ruleSet)[c]
+	if !ok || len(bagRules) == 0 {
+		return 0
+	}
+
+	var count int
+	for _, r := range bagRules {
+		count += r.count
+		count += r.count * getBagCount(ruleSet, r.c)
+	}
+
+	return count
 }

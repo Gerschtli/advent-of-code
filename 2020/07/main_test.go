@@ -18,9 +18,10 @@ func TestMainLogsResults(t *testing.T) {
 
 	lines := strings.Split(buf.String(), "\n")
 
-	assert.Len(t, lines, 2)
+	assert.Len(t, lines, 3)
 	assert.Contains(t, lines[0], "131 bag colors can contain shiny gold")
-	assert.Empty(t, lines[1])
+	assert.Contains(t, lines[1], "11261 bags are required to be in shiny gold")
+	assert.Empty(t, lines[2])
 }
 
 func TestReadRulesReturnsParsedRuleSet(t *testing.T) {
@@ -94,4 +95,22 @@ func TestGetTransitiveContainableForColorReturnsTransitiveColorList(t *testing.T
 		"light red":    true,
 		"dark orange":  true,
 	})
+}
+
+func TestGetBagCount(t *testing.T) {
+	rulesSet := rules(map[color][]bagRule{
+		"light red":    {{"bright white", 1}, {"muted yellow", 2}},
+		"dark orange":  {{"bright white", 3}, {"muted yellow", 4}},
+		"bright white": {{"shiny gold", 1}},
+		"muted yellow": {{"shiny gold", 2}, {"faded blue", 9}},
+		"shiny gold":   {{"dark olive", 1}, {"vibrant plum", 2}},
+		"dark olive":   {{"faded blue", 3}, {"dotted black", 4}},
+		"vibrant plum": {{"faded blue", 5}, {"dotted black", 6}},
+		"faded blue":   {},
+		"dotted black": {},
+	})
+
+	count := getBagCount(&rulesSet, "shiny gold")
+
+	assert.Equal(t, 32, count)
 }
