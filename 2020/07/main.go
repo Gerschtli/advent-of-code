@@ -3,11 +3,12 @@ package main
 import (
 	"log"
 	"regexp"
+	"strconv"
 
 	"github.com/Gerschtli/advent-of-code/lib/go/file"
 )
 
-var rulesRegex = regexp.MustCompile(`(\w+ \w+) bags?`)
+var rulesRegex = regexp.MustCompile(`(?:(\d+) )?(\w+ \w+) bags?`)
 
 type bagRule struct {
 	c     color
@@ -34,15 +35,15 @@ func readRules(filename string) (rules, error) {
 
 	err := file.ReadFile(filename, func(index int, line string) error {
 		matches := rulesRegex.FindAllStringSubmatch(line, -1)
-		key := color(matches[0][1])
+		key := color(matches[0][2])
 		ruleSet[key] = []bagRule{}
 
 		for _, match := range matches[1:] {
-			if match[1] == "no other" {
+			if match[2] == "no other" {
 				continue
 			}
-
-			ruleSet[key] = append(ruleSet[key], bagRule{c: color(match[1])})
+			count, _ := strconv.Atoi(match[1]) // does never fail because of regex
+			ruleSet[key] = append(ruleSet[key], bagRule{color(match[2]), count})
 		}
 
 		return nil

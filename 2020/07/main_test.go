@@ -27,13 +27,13 @@ func TestReadRulesReturnsParsedRuleSet(t *testing.T) {
 	ruleSet, err := readRules("./files/example.txt")
 
 	expected := rules(map[color][]bagRule{
-		"light red":    {{"bright white", 0}, {"muted yellow", 0}},
-		"dark orange":  {{"bright white", 0}, {"muted yellow", 0}},
-		"bright white": {{"shiny gold", 0}},
-		"muted yellow": {{"shiny gold", 0}, {"faded blue", 0}},
-		"shiny gold":   {{"dark olive", 0}, {"vibrant plum", 0}},
-		"dark olive":   {{"faded blue", 0}, {"dotted black", 0}},
-		"vibrant plum": {{"faded blue", 0}, {"dotted black", 0}},
+		"light red":    {{"bright white", 1}, {"muted yellow", 2}},
+		"dark orange":  {{"bright white", 3}, {"muted yellow", 4}},
+		"bright white": {{"shiny gold", 1}},
+		"muted yellow": {{"shiny gold", 2}, {"faded blue", 9}},
+		"shiny gold":   {{"dark olive", 1}, {"vibrant plum", 2}},
+		"dark olive":   {{"faded blue", 3}, {"dotted black", 4}},
+		"vibrant plum": {{"faded blue", 5}, {"dotted black", 6}},
 		"faded blue":   {},
 		"dotted black": {},
 	})
@@ -44,13 +44,13 @@ func TestReadRulesReturnsParsedRuleSet(t *testing.T) {
 
 func TestTransposeRulesReturnsContainable(t *testing.T) {
 	rulesSet := rules(map[color][]bagRule{
-		"light red":    {{"bright white", 0}, {"muted yellow", 0}},
-		"dark orange":  {{"bright white", 0}, {"muted yellow", 0}},
-		"bright white": {{"shiny gold", 0}},
-		"muted yellow": {{"shiny gold", 0}, {"faded blue", 0}},
-		"shiny gold":   {{"dark olive", 0}, {"vibrant plum", 0}},
-		"dark olive":   {{"faded blue", 0}, {"dotted black", 0}},
-		"vibrant plum": {{"faded blue", 0}, {"dotted black", 0}},
+		"light red":    {{"bright white", 1}, {"muted yellow", 2}},
+		"dark orange":  {{"bright white", 3}, {"muted yellow", 4}},
+		"bright white": {{"shiny gold", 1}},
+		"muted yellow": {{"shiny gold", 2}, {"faded blue", 9}},
+		"shiny gold":   {{"dark olive", 1}, {"vibrant plum", 2}},
+		"dark olive":   {{"faded blue", 3}, {"dotted black", 4}},
+		"vibrant plum": {{"faded blue", 5}, {"dotted black", 6}},
 		"faded blue":   {},
 		"dotted black": {},
 	})
