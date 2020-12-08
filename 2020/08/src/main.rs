@@ -10,6 +10,7 @@ use crate::code::Code;
 use crate::state::{RunResult, State};
 
 mod code;
+mod mutator;
 mod state;
 
 fn main() -> Result<()> {
