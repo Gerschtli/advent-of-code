@@ -1,13 +1,13 @@
 use error::{AppError, Result};
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub(super) enum Instruction {
     Acc(i32),
     Jmp(i32),
     Nop(i32),
 }
 
-#[derive(Debug, Default, Eq, PartialEq)]
+#[derive(Clone, Debug, Default, Eq, PartialEq)]
 pub(super) struct Code {
     instructions: Vec<Instruction>,
 }
@@ -36,6 +36,18 @@ impl Code {
 
     pub(super) fn get_instruction(&self, index: usize) -> Option<&Instruction> {
         self.instructions.get(index)
+    }
+
+    pub(super) fn swap_instruction(&mut self, index: usize) {
+        match self.instructions.get(index) {
+            Some(&Instruction::Nop(value)) => {
+                self.instructions[index] = Instruction::Jmp(value);
+            }
+            Some(&Instruction::Jmp(value)) => {
+                self.instructions[index] = Instruction::Nop(value);
+            }
+            _ => (),
+        }
     }
 }
 
@@ -139,5 +151,69 @@ mod tests {
         let result = code.get_instruction(3);
 
         assert_that!(result, none());
+    }
+
+    #[test]
+    fn code_swap_instruction_ignores_acc() {
+        let mut code = Code {
+            instructions: vec![Instruction::Acc(0), Instruction::Acc(1)],
+        };
+
+        code.swap_instruction(1);
+
+        assert_that!(
+            code,
+            eq(Code {
+                instructions: vec![Instruction::Acc(0), Instruction::Acc(1),],
+            })
+        );
+    }
+
+    #[test]
+    fn code_swap_instruction_changes_nop() {
+        let mut code = Code {
+            instructions: vec![Instruction::Acc(0), Instruction::Nop(1)],
+        };
+
+        code.swap_instruction(1);
+
+        assert_that!(
+            code,
+            eq(Code {
+                instructions: vec![Instruction::Acc(0), Instruction::Jmp(1),],
+            })
+        );
+    }
+
+    #[test]
+    fn code_swap_instruction_changes_jmp() {
+        let mut code = Code {
+            instructions: vec![Instruction::Acc(0), Instruction::Jmp(1)],
+        };
+
+        code.swap_instruction(1);
+
+        assert_that!(
+            code,
+            eq(Code {
+                instructions: vec![Instruction::Acc(0), Instruction::Nop(1),],
+            })
+        );
+    }
+
+    #[test]
+    fn code_swap_instruction_ignores_wrong_index() {
+        let mut code = Code {
+            instructions: vec![Instruction::Acc(0), Instruction::Jmp(1)],
+        };
+
+        code.swap_instruction(2);
+
+        assert_that!(
+            code,
+            eq(Code {
+                instructions: vec![Instruction::Acc(0), Instruction::Jmp(1),],
+            })
+        );
     }
 }
