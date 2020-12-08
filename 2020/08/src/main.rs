@@ -74,7 +74,7 @@ mod tests {
     fn parse_lines_returns_code() {
         let lines = vec![
             "acc -2".to_string(),
-            "nop +0".to_string(),
+            "nop +1".to_string(),
             "jmp +3".to_string(),
         ];
 
@@ -85,7 +85,7 @@ mod tests {
             code.unwrap(),
             eq(Code::init(vec![
                 Instruction::Acc(-2),
-                Instruction::Nop,
+                Instruction::Nop(1),
                 Instruction::Jmp(3)
             ]))
         )

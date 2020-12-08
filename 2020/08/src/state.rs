@@ -52,7 +52,7 @@ impl<'a> State<'a> {
 
                 self.next_index = new_index as usize;
             }
-            Some(&Instruction::Nop) => {
+            Some(&Instruction::Nop(_)) => {
                 self.next_index += 1;
             }
             None => return RunResult::End,
@@ -74,7 +74,7 @@ mod tests {
 
     #[test]
     fn state_init_returns_empty_state() {
-        let code = Code::init(vec![Instruction::Nop]);
+        let code = Code::init(vec![Instruction::Nop(1)]);
 
         let state = State::init(&code);
 
@@ -129,7 +129,7 @@ mod tests {
 
     #[test]
     fn state_run_executes_step_nop() {
-        let code = Code::init(vec![Instruction::Nop]);
+        let code = Code::init(vec![Instruction::Nop(1)]);
         let mut state = State::init(&code);
 
         let result = state.run();
@@ -150,7 +150,7 @@ mod tests {
     fn state_run_executes_step_on_saved_index() {
         let code = Code::init(vec![
             Instruction::Acc(5),
-            Instruction::Nop,
+            Instruction::Nop(1),
             Instruction::Jmp(-2),
         ]);
         let mut state = State::init(&code);
@@ -173,7 +173,7 @@ mod tests {
     fn state_run_detects_infinite_loop() {
         let code = Code::init(vec![
             Instruction::Acc(5),
-            Instruction::Nop,
+            Instruction::Nop(1),
             Instruction::Jmp(-2),
         ]);
         let mut state = State::init(&code);
@@ -198,7 +198,7 @@ mod tests {
     fn state_run_returns_error_for_invalid_jmp() {
         let code = Code::init(vec![
             Instruction::Acc(5),
-            Instruction::Nop,
+            Instruction::Nop(1),
             Instruction::Jmp(-3),
         ]);
         let mut state = State::init(&code);

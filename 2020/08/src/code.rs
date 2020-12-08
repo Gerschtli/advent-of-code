@@ -4,7 +4,7 @@ use error::{AppError, Result};
 pub(super) enum Instruction {
     Acc(i32),
     Jmp(i32),
-    Nop,
+    Nop(i32),
 }
 
 #[derive(Debug, Default, Eq, PartialEq)]
@@ -22,7 +22,7 @@ impl Code {
         self.instructions.push(match instruction {
             "acc" => Instruction::Acc(value),
             "jmp" => Instruction::Jmp(value),
-            "nop" => Instruction::Nop,
+            "nop" => Instruction::Nop(value),
             _ => {
                 return Err(AppError::init(format!(
                     "invalid instruction: {}",
@@ -47,12 +47,12 @@ mod tests {
 
     #[test]
     fn code_init_returns_instance() {
-        let code = Code::init(vec![Instruction::Acc(5), Instruction::Nop]);
+        let code = Code::init(vec![Instruction::Acc(5), Instruction::Nop(1)]);
 
         assert_that!(
             code,
             eq(Code {
-                instructions: vec![Instruction::Acc(5), Instruction::Nop]
+                instructions: vec![Instruction::Acc(5), Instruction::Nop(1)]
             })
         )
     }
@@ -88,13 +88,13 @@ mod tests {
     #[test]
     fn code_add_instruction_adds_nop() {
         let mut code = Code::default();
-        let result = code.add_instruction("nop", 0);
+        let result = code.add_instruction("nop", 1);
 
         assert_that!(&result, ok());
         assert_that!(
             code,
             eq(Code {
-                instructions: vec![Instruction::Nop]
+                instructions: vec![Instruction::Nop(1)]
             })
         );
     }
