@@ -33,6 +33,10 @@ impl Code {
 
         Ok(())
     }
+
+    pub(super) fn get_instruction(&self, index: usize) -> Option<&Instruction> {
+        self.instructions.get(index)
+    }
 }
 
 #[cfg(test)]
@@ -105,5 +109,35 @@ mod tests {
             format!("{}", result.unwrap_err()),
             eq("app error: invalid instruction: abc")
         );
+    }
+
+    #[test]
+    fn code_get_instruction_returns_object() {
+        let code = Code {
+            instructions: vec![
+                Instruction::Acc(0),
+                Instruction::Acc(1),
+                Instruction::Acc(2),
+            ],
+        };
+
+        let result = code.get_instruction(1);
+
+        assert_that!(result, has(&Instruction::Acc(1)));
+    }
+
+    #[test]
+    fn code_get_instruction_returns_none_if_not_in_range() {
+        let code = Code {
+            instructions: vec![
+                Instruction::Acc(0),
+                Instruction::Acc(1),
+                Instruction::Acc(2),
+            ],
+        };
+
+        let result = code.get_instruction(3);
+
+        assert_that!(result, none());
     }
 }
