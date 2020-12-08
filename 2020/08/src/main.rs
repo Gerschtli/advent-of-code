@@ -4,13 +4,41 @@
 extern crate hamcrest2;
 
 use error::{AppError, Result};
+use file::read_lines;
 
 use crate::code::Code;
+use crate::state::{RunResult, State};
 
 mod code;
 mod state;
 
-fn main() {}
+fn main() -> Result<()> {
+    let acc_before_infinite_loop = get_acc_before_infinite_loop()?;
+
+    println!(
+        "accumulator before infinite loop: {}",
+        acc_before_infinite_loop
+    );
+
+    Ok(())
+}
+
+fn get_acc_before_infinite_loop() -> Result<i32> {
+    let lines = read_lines("./files/boot_code.txt")?;
+    let code = parse_lines(&lines)?;
+    let mut state = State::init(&code);
+
+    loop {
+        match state.run() {
+            RunResult::InfiniteLoopReached => return Ok(state.get_accumulator()),
+            RunResult::Success => (),
+            RunResult::InvalidInstruction => {
+                return Err(AppError::init("invalid instruction found"));
+            }
+            RunResult::End => return Err(AppError::init("ended without infinite loop")),
+        }
+    }
+}
 
 fn parse_lines(lines: &[String]) -> Result<Code> {
     let mut code = Code::default();
@@ -34,6 +62,13 @@ mod tests {
     use crate::code::Instruction;
 
     use super::*;
+
+    #[test]
+    fn test_get_acc_before_infinite_loop() {
+        let result = get_acc_before_infinite_loop();
+
+        assert_that!(result, has(1818));
+    }
 
     #[test]
     fn parse_lines_returns_code() {

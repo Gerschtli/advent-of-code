@@ -28,6 +28,10 @@ impl<'a> State<'a> {
         }
     }
 
+    pub(super) fn get_accumulator(&self) -> i32 {
+        self.accumulator
+    }
+
     pub(super) fn run(&mut self) -> RunResult {
         if self.executed_indexes.contains(&self.next_index) {
             return RunResult::InfiniteLoopReached;
