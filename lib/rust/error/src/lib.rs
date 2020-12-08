@@ -18,6 +18,8 @@ pub struct AppError {
     message: Option<String>,
 }
 
+impl Error for AppError {}
+
 impl AppError {
     pub fn init<I>(message: I) -> Self
     where
@@ -28,16 +30,27 @@ impl AppError {
             message: Some(message.into()),
         }
     }
+
+    pub fn init_err<I, E>(message: I, error: E) -> Self
+    where
+        I: Into<String>,
+        E: Into<Box<dyn Error>>,
+    {
+        AppError {
+            error: Some(error.into()),
+            message: Some(message.into()),
+        }
+    }
 }
 
 impl fmt::Display for AppError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "app error:")?;
+        write!(f, "app error")?;
         if let Some(m) = &self.message {
-            write!(f, " {}", m)?
+            write!(f, ": {}", m)?
         }
         if let Some(e) = &self.error {
-            write!(f, " {}", e)?
+            write!(f, ": {}", e)?
         }
         Ok(())
     }
@@ -74,6 +87,15 @@ mod tests {
         assert_that!(
             format!("{}", AppError::init("test".to_string())),
             eq("app error: test")
+        );
+    }
+
+    #[test]
+    fn app_error_init_sets_message_with_error() {
+        let error = io::Error::new(io::ErrorKind::AlreadyExists, "oops");
+        assert_that!(
+            format!("{}", AppError::init_err("test", error)),
+            eq("app error: test: oops")
         );
     }
 
