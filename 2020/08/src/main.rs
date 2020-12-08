@@ -8,6 +8,7 @@ use error::{AppError, Result};
 use crate::code::Code;
 
 mod code;
+mod state;
 
 fn main() {}
 
