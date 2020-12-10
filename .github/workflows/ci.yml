@@ -15,6 +15,7 @@ jobs:
           - 2020/03
           - 2020/05
           - 2020/07
+          - 2020/09
 
     steps:
       - name: Checkout code
