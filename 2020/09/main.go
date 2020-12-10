@@ -20,6 +20,13 @@ func main() {
 	}
 
 	log.Printf("first invalid number: %d\n", firstInvalid)
+
+	weakness, found := o.findWeakness(firstInvalid)
+	if !found {
+		log.Fatal("no weakness found")
+	}
+
+	log.Printf("weakness: %d\n", weakness)
 }
 
 func parseFile(filename string) ([]int, error) {

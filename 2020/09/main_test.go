@@ -18,9 +18,10 @@ func TestMainLogsResults(t *testing.T) {
 
 	lines := strings.Split(buf.String(), "\n")
 
-	assert.Len(t, lines, 2)
+	assert.Len(t, lines, 3)
 	assert.Contains(t, lines[0], "first invalid number: 248131121")
-	assert.Empty(t, lines[1])
+	assert.Contains(t, lines[1], "weakness: 31580383")
+	assert.Empty(t, lines[2])
 }
 
 func TestParseFileReturnsSliceOfInts(t *testing.T) {
