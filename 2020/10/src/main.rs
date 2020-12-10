@@ -7,6 +7,8 @@ use std::result;
 
 use error::Result;
 
+mod chain;
+
 fn main() {}
 
 fn parse_lines(lines: &[String]) -> Result<Vec<i32>> {
