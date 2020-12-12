@@ -20,7 +20,7 @@ func TestSeatsRunRoundReplacesFreeWithOccupiedWithFirstInitialData(t *testing.T)
 		{statusFree, statusFloor, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree, statusFree},
 	})
 
-	seatsRound1 := seatsInitial.runRound()
+	seatsRound1 := seatsInitial.runRound(seatsInitial.countOccupied, 4)
 
 	expected := seats([][]status{
 		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
@@ -52,7 +52,7 @@ func TestSeatsRunRoundFollowsRules(t *testing.T) {
 		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
 	})
 
-	seatsRound2 := seatsRound1.runRound()
+	seatsRound2 := seatsRound1.runRound(seatsRound1.countOccupied, 4)
 
 	expected := seats([][]status{
 		{statusOccupied, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusOccupied, statusFloor, statusOccupied, statusOccupied},

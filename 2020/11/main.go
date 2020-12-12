@@ -15,7 +15,7 @@ func main() {
 
 	currentSeats, newSeats := seatsMap, seats{}
 	for {
-		newSeats = currentSeats.runRound()
+		newSeats = currentSeats.runRound(currentSeats.countOccupied, 4)
 
 		if reflect.DeepEqual(currentSeats, newSeats) {
 			log.Printf("%d occupied seats\n", newSeats.countAllOccupied())

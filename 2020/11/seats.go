@@ -10,19 +10,19 @@ const (
 
 type seats [][]status
 
-func (s *seats) runRound() seats {
+func (s *seats) runRound(countOccupied func(y int, x int) int, triggerOccupied int) seats {
 	var newSeats seats
 
 	for i := range *s {
 		var row []status
 		for j, value := range (*s)[i] {
 			newValue := value
-			count := s.countOccupied(i, j)
+			count := countOccupied(i, j)
 
 			if value == statusFree && count == 0 {
 				newValue = statusOccupied
 			}
-			if value == statusOccupied && count >= 4 {
+			if value == statusOccupied && count >= triggerOccupied {
 				newValue = statusFree
 			}
 
