@@ -7,25 +7,27 @@ use std::result;
 
 use error::Result;
 
-use crate::chain::find_chain;
+use crate::chain::{find_chain, get_chain_count};
 
 mod chain;
 
 fn main() -> Result<()> {
-    let chain_difference = run()?;
+    let (chain_difference, chain_count) = run()?;
 
     println!("chain difference: {}", chain_difference);
+    println!("chain count: {}", chain_count);
 
     Ok(())
 }
 
-fn run() -> Result<i32> {
+fn run() -> Result<(i32, i64)> {
     let lines = file::read_lines("./files/adapters.txt")?;
     let adapters = parse_lines(&lines)?;
 
     let chain_difference = find_chain(&adapters);
+    let chain_count = get_chain_count(&adapters);
 
-    Ok(chain_difference)
+    Ok((chain_difference, chain_count))
 }
 
 fn parse_lines(lines: &[String]) -> Result<Vec<i32>> {
@@ -50,7 +52,7 @@ mod tests {
         let result = run();
 
         assert_that!(&result, ok());
-        assert_that!(result.unwrap(), equal_to(2048));
+        assert_that!(result.unwrap(), equal_to((2_048, 1_322_306_994_176)));
     }
 
     #[test]
