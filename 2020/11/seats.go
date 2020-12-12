@@ -1,5 +1,9 @@
 package main
 
+import (
+	"reflect"
+)
+
 type status int
 
 const (
@@ -55,6 +59,51 @@ func (s *seats) countOccupied(y int, x int) int {
 	return count
 }
 
+func (s *seats) countOccupiedInSight(y int, x int) int {
+	final := [3][3]bool{
+		{true, true, true},
+		{true, false, true},
+		{true, true, true},
+	}
+	var end [3][3]bool
+	var count int
+
+	for i := 1; !reflect.DeepEqual(end, final); i++ {
+		count += s.sub(&(end[0][0]), y-i, x-i)
+		count += s.sub(&(end[0][1]), y-i, x)
+		count += s.sub(&(end[0][2]), y-i, x+i)
+		count += s.sub(&(end[1][0]), y, x-i)
+		count += s.sub(&(end[1][2]), y, x+i)
+		count += s.sub(&(end[2][0]), y+i, x-i)
+		count += s.sub(&(end[2][1]), y+i, x)
+		count += s.sub(&(end[2][2]), y+i, x+i)
+	}
+
+	return count
+}
+
+func (s *seats) sub(end *bool, y int, x int) int {
+	if *end {
+		return 0
+	}
+
+	if y < 0 || y >= len(*s) || x < 0 || x >= len((*s)[0]) {
+		*end = true
+		return 0
+	}
+
+	v := (*s)[y][x]
+	if v != sFloor {
+		*end = true
+	}
+
+	if v == sOccup {
+		return 1
+	}
+
+	return 0
+}
+
 func (s *seats) countAllOccupied() int {
 	var count int
 	for i := range *s {
@@ -66,6 +115,27 @@ func (s *seats) countAllOccupied() int {
 	}
 
 	return count
+}
+
+func (s *seats) String() string {
+	var str string
+
+	for i := range *s {
+		for _, value := range (*s)[i] {
+			if value == sFloor {
+				str += "."
+			}
+			if value == sEmpty {
+				str += "L"
+			}
+			if value == sOccup {
+				str += "#"
+			}
+		}
+		str += "\n"
+	}
+
+	return str
 }
 
 func min(i, i2 int) int {
