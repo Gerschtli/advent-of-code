@@ -55,6 +55,19 @@ func (s *seats) countOccupied(y int, x int) int {
 	return count
 }
 
+func (s *seats) countAllOccupied() int {
+	var count int
+	for i := range *s {
+		for _, value := range (*s)[i] {
+			if value == statusOccupied {
+				count += 1
+			}
+		}
+	}
+
+	return count
+}
+
 func min(i, i2 int) int {
 	if i <= i2 {
 		return i
