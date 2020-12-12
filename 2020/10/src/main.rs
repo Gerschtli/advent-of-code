@@ -23,16 +23,18 @@ fn run() -> Result<i32> {
     let lines = file::read_lines("./files/adapters.txt")?;
     let adapters = parse_lines(&lines)?;
 
-    let chain_difference = find_chain(adapters);
+    let chain_difference = find_chain(&adapters);
 
     Ok(chain_difference)
 }
 
 fn parse_lines(lines: &[String]) -> Result<Vec<i32>> {
-    let numbers = lines
+    let mut numbers = lines
         .iter()
         .map(|line| line.parse())
         .collect::<result::Result<Vec<_>, _>>()?;
+
+    numbers.sort();
 
     Ok(numbers)
 }
@@ -64,7 +66,7 @@ mod tests {
         assert_that!(&numbers, ok());
         assert_that!(
             &numbers.unwrap(),
-            contains(vec![35, 20, 15, 25, 47]).exactly().in_order()
+            contains(vec![15, 20, 25, 35, 47]).exactly().in_order()
         );
     }
 
