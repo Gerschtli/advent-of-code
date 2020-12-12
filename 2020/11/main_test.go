@@ -18,9 +18,10 @@ func TestMainLogsResults(t *testing.T) {
 
 	lines := strings.Split(buf.String(), "\n")
 
-	assert.Len(t, lines, 2)
+	assert.Len(t, lines, 3)
 	assert.Contains(t, lines[0], "2448 occupied seats")
-	assert.Empty(t, lines[1])
+	assert.Contains(t, lines[1], "2234 occupied seats")
+	assert.Empty(t, lines[2])
 }
 
 func TestParseSeatsReturnsSeats(t *testing.T) {

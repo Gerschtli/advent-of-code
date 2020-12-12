@@ -24,6 +24,18 @@ func main() {
 
 		currentSeats = newSeats
 	}
+
+	currentSeats, newSeats = seatsMap, seats{}
+	for {
+		newSeats = currentSeats.runRound(currentSeats.countOccupiedInSight, 5)
+
+		if reflect.DeepEqual(currentSeats, newSeats) {
+			log.Printf("%d occupied seats\n", newSeats.countAllOccupied())
+			break
+		}
+
+		currentSeats = newSeats
+	}
 }
 
 func parseSeats(filename string) (seats, error) {
