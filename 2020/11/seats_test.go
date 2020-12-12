@@ -8,31 +8,31 @@ import (
 
 func TestSeatsRunRoundReplacesFreeWithOccupiedWithFirstInitialData(t *testing.T) {
 	seatsInitial := seats([][]status{
-		{statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusFree, statusFloor, statusFree, statusFloor, statusFree, statusFloor, statusFloor, statusFree, statusFloor, statusFloor},
-		{statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusFree, statusFloor, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusFloor, statusFloor, statusFree, statusFloor, statusFree, statusFloor, statusFloor, statusFloor, statusFloor, statusFloor},
-		{statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree},
-		{statusFree, statusFloor, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree},
-		{statusFree, statusFloor, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree, statusFree},
+		{sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sEmpty, sFloor, sEmpty, sFloor, sEmpty, sFloor, sFloor, sEmpty, sFloor, sFloor},
+		{sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sEmpty, sFloor, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sFloor, sFloor, sEmpty, sFloor, sEmpty, sFloor, sFloor, sFloor, sFloor, sFloor},
+		{sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty},
+		{sEmpty, sFloor, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty},
+		{sEmpty, sFloor, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
 	})
 
 	seatsRound1 := seatsInitial.runRound(seatsInitial.countOccupied, 4)
 
 	expected := seats([][]status{
-		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusOccupied, statusFloor, statusOccupied, statusFloor, statusOccupied, statusFloor, statusFloor, statusOccupied, statusFloor, statusFloor},
-		{statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusFloor, statusFloor, statusOccupied, statusFloor, statusOccupied, statusFloor, statusFloor, statusFloor, statusFloor, statusFloor},
-		{statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied},
-		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusFloor, statusOccupied},
-		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
+		{sOccup, sFloor, sOccup, sOccup, sFloor, sOccup, sOccup, sFloor, sOccup, sOccup},
+		{sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sFloor, sOccup, sOccup},
+		{sOccup, sFloor, sOccup, sFloor, sOccup, sFloor, sFloor, sOccup, sFloor, sFloor},
+		{sOccup, sOccup, sOccup, sOccup, sFloor, sOccup, sOccup, sFloor, sOccup, sOccup},
+		{sOccup, sFloor, sOccup, sOccup, sFloor, sOccup, sOccup, sFloor, sOccup, sOccup},
+		{sOccup, sFloor, sOccup, sOccup, sOccup, sOccup, sOccup, sFloor, sOccup, sOccup},
+		{sFloor, sFloor, sOccup, sFloor, sOccup, sFloor, sFloor, sFloor, sFloor, sFloor},
+		{sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup},
+		{sOccup, sFloor, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sFloor, sOccup},
+		{sOccup, sFloor, sOccup, sOccup, sOccup, sOccup, sOccup, sFloor, sOccup, sOccup},
 	})
 
 	assert.Equal(t, expected, seatsRound1)
@@ -40,31 +40,31 @@ func TestSeatsRunRoundReplacesFreeWithOccupiedWithFirstInitialData(t *testing.T)
 
 func TestSeatsRunRoundFollowsRules(t *testing.T) {
 	seatsRound1 := seats([][]status{
-		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusOccupied, statusFloor, statusOccupied, statusFloor, statusOccupied, statusFloor, statusFloor, statusOccupied, statusFloor, statusFloor},
-		{statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusFloor, statusFloor, statusOccupied, statusFloor, statusOccupied, statusFloor, statusFloor, statusFloor, statusFloor, statusFloor},
-		{statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied},
-		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusFloor, statusOccupied},
-		{statusOccupied, statusFloor, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied},
+		{sOccup, sFloor, sOccup, sOccup, sFloor, sOccup, sOccup, sFloor, sOccup, sOccup},
+		{sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sFloor, sOccup, sOccup},
+		{sOccup, sFloor, sOccup, sFloor, sOccup, sFloor, sFloor, sOccup, sFloor, sFloor},
+		{sOccup, sOccup, sOccup, sOccup, sFloor, sOccup, sOccup, sFloor, sOccup, sOccup},
+		{sOccup, sFloor, sOccup, sOccup, sFloor, sOccup, sOccup, sFloor, sOccup, sOccup},
+		{sOccup, sFloor, sOccup, sOccup, sOccup, sOccup, sOccup, sFloor, sOccup, sOccup},
+		{sFloor, sFloor, sOccup, sFloor, sOccup, sFloor, sFloor, sFloor, sFloor, sFloor},
+		{sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup},
+		{sOccup, sFloor, sOccup, sOccup, sOccup, sOccup, sOccup, sOccup, sFloor, sOccup},
+		{sOccup, sFloor, sOccup, sOccup, sOccup, sOccup, sOccup, sFloor, sOccup, sOccup},
 	})
 
 	seatsRound2 := seatsRound1.runRound(seatsRound1.countOccupied, 4)
 
 	expected := seats([][]status{
-		{statusOccupied, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusOccupied, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree, statusOccupied},
-		{statusFree, statusFloor, statusFree, statusFloor, statusFree, statusFloor, statusFloor, statusFree, statusFloor, statusFloor},
-		{statusOccupied, statusFree, statusFree, statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusOccupied},
-		{statusOccupied, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusOccupied, statusFloor, statusFree, statusFree, statusFree, statusFree, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusFloor, statusFloor, statusFree, statusFloor, statusFree, statusFloor, statusFloor, statusFloor, statusFloor, statusFloor},
-		{statusOccupied, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusOccupied},
-		{statusOccupied, statusFloor, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree},
-		{statusOccupied, statusFloor, statusOccupied, statusFree, statusFree, statusFree, statusFree, statusFloor, statusOccupied, statusOccupied},
+		{sOccup, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sOccup, sFloor, sOccup, sOccup},
+		{sOccup, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty, sOccup},
+		{sEmpty, sFloor, sEmpty, sFloor, sEmpty, sFloor, sFloor, sEmpty, sFloor, sFloor},
+		{sOccup, sEmpty, sEmpty, sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sOccup},
+		{sOccup, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sOccup, sFloor, sEmpty, sEmpty, sEmpty, sEmpty, sOccup, sFloor, sOccup, sOccup},
+		{sFloor, sFloor, sEmpty, sFloor, sEmpty, sFloor, sFloor, sFloor, sFloor, sFloor},
+		{sOccup, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sOccup},
+		{sOccup, sFloor, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty},
+		{sOccup, sFloor, sOccup, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sOccup, sOccup},
 	})
 
 	assert.Equal(t, expected, seatsRound2)
@@ -72,16 +72,16 @@ func TestSeatsRunRoundFollowsRules(t *testing.T) {
 
 func TestSeatsCountAllOccupied(t *testing.T) {
 	seatsRoundFinal := seats([][]status{
-		{statusOccupied, statusFloor, statusOccupied, statusFree, statusFloor, statusFree, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusOccupied, statusFree, statusFree, statusFree, statusOccupied, statusFree, statusFree, statusFloor, statusFree, statusOccupied},
-		{statusFree, statusFloor, statusOccupied, statusFloor, statusFree, statusFloor, statusFloor, statusOccupied, statusFloor, statusFloor},
-		{statusOccupied, statusFree, statusOccupied, statusOccupied, statusFloor, statusOccupied, statusOccupied, statusFloor, statusFree, statusOccupied},
-		{statusOccupied, statusFloor, statusOccupied, statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusOccupied, statusFloor, statusOccupied, statusFree, statusOccupied, statusFree, statusOccupied, statusFloor, statusOccupied, statusOccupied},
-		{statusFloor, statusFloor, statusFree, statusFloor, statusFree, statusFloor, statusFloor, statusFloor, statusFloor, statusFloor},
-		{statusOccupied, statusFree, statusOccupied, statusFree, statusOccupied, statusOccupied, statusFree, statusOccupied, statusFree, statusOccupied},
-		{statusOccupied, statusFloor, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree},
-		{statusOccupied, statusFloor, statusOccupied, statusFree, statusOccupied, statusFree, statusOccupied, statusFloor, statusOccupied, statusOccupied},
+		{sOccup, sFloor, sOccup, sEmpty, sFloor, sEmpty, sOccup, sFloor, sOccup, sOccup},
+		{sOccup, sEmpty, sEmpty, sEmpty, sOccup, sEmpty, sEmpty, sFloor, sEmpty, sOccup},
+		{sEmpty, sFloor, sOccup, sFloor, sEmpty, sFloor, sFloor, sOccup, sFloor, sFloor},
+		{sOccup, sEmpty, sOccup, sOccup, sFloor, sOccup, sOccup, sFloor, sEmpty, sOccup},
+		{sOccup, sFloor, sOccup, sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sOccup, sFloor, sOccup, sEmpty, sOccup, sEmpty, sOccup, sFloor, sOccup, sOccup},
+		{sFloor, sFloor, sEmpty, sFloor, sEmpty, sFloor, sFloor, sFloor, sFloor, sFloor},
+		{sOccup, sEmpty, sOccup, sEmpty, sOccup, sOccup, sEmpty, sOccup, sEmpty, sOccup},
+		{sOccup, sFloor, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty},
+		{sOccup, sFloor, sOccup, sEmpty, sOccup, sEmpty, sOccup, sFloor, sOccup, sOccup},
 	})
 
 	count := seatsRoundFinal.countAllOccupied()

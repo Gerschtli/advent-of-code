@@ -26,16 +26,16 @@ func TestMainLogsResults(t *testing.T) {
 func TestParseSeatsReturnsSeats(t *testing.T) {
 	seatsMap, err := parseSeats("./files/example.txt")
 	expected := seats([][]status{
-		{statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusFree, statusFloor, statusFree, statusFloor, statusFree, statusFloor, statusFloor, statusFree, statusFloor, statusFloor},
-		{statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusFree, statusFloor, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree, statusFree},
-		{statusFloor, statusFloor, statusFree, statusFloor, statusFree, statusFloor, statusFloor, statusFloor, statusFloor, statusFloor},
-		{statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree},
-		{statusFree, statusFloor, statusFree, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree},
-		{statusFree, statusFloor, statusFree, statusFree, statusFree, statusFree, statusFree, statusFloor, statusFree, statusFree},
+		{sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sEmpty, sFloor, sEmpty, sFloor, sEmpty, sFloor, sFloor, sEmpty, sFloor, sFloor},
+		{sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sEmpty, sFloor, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
+		{sFloor, sFloor, sEmpty, sFloor, sEmpty, sFloor, sFloor, sFloor, sFloor, sFloor},
+		{sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty},
+		{sEmpty, sFloor, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty},
+		{sEmpty, sFloor, sEmpty, sEmpty, sEmpty, sEmpty, sEmpty, sFloor, sEmpty, sEmpty},
 	})
 
 	assert.Nil(t, err)

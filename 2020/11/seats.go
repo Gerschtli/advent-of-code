@@ -3,9 +3,9 @@ package main
 type status int
 
 const (
-	statusFloor status = iota
-	statusFree
-	statusOccupied
+	sFloor status = iota
+	sEmpty
+	sOccup
 )
 
 type seats [][]status
@@ -19,11 +19,11 @@ func (s *seats) runRound(countOccupied func(y int, x int) int, triggerOccupied i
 			newValue := value
 			count := countOccupied(i, j)
 
-			if value == statusFree && count == 0 {
-				newValue = statusOccupied
+			if value == sEmpty && count == 0 {
+				newValue = sOccup
 			}
-			if value == statusOccupied && count >= triggerOccupied {
-				newValue = statusFree
+			if value == sOccup && count >= triggerOccupied {
+				newValue = sEmpty
 			}
 
 			row = append(row, newValue)
@@ -46,7 +46,7 @@ func (s *seats) countOccupied(y int, x int) int {
 
 			value := (*s)[i][j]
 
-			if value == statusOccupied {
+			if value == sOccup {
 				count += 1
 			}
 		}
@@ -59,7 +59,7 @@ func (s *seats) countAllOccupied() int {
 	var count int
 	for i := range *s {
 		for _, value := range (*s)[i] {
-			if value == statusOccupied {
+			if value == sOccup {
 				count += 1
 			}
 		}

@@ -32,9 +32,9 @@ func parseSeats(filename string) (seats, error) {
 	err := file.ReadFile(filename, func(index int, line string) error {
 		var row []status
 		for _, c := range line {
-			s := statusFree
+			s := sEmpty
 			if c == '.' {
-				s = statusFloor
+				s = sFloor
 			}
 
 			row = append(row, s)
