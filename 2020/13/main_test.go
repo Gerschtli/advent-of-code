@@ -18,8 +18,9 @@ func TestMainLogsResults(t *testing.T) {
 
 	lines := strings.Split(buf.String(), "\n")
 
-	assert.Len(t, lines, 1)
-	assert.Empty(t, lines[0])
+	assert.Len(t, lines, 2)
+	assert.Contains(t, lines[0], "bus: 23, waiting time: 5, multiplied: 115")
+	assert.Empty(t, lines[1])
 }
 
 func TestParseNotesReturnsTimestampAndBusses(t *testing.T) {

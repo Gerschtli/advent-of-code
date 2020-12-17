@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"log"
 	"math"
 	"strconv"
 	"strings"
@@ -10,6 +11,13 @@ import (
 )
 
 func main() {
+	timestamp, busses, err := parseNotes("./files/notes.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	bus, waitingTime := findFirstBus(timestamp, busses)
+	log.Printf("bus: %d, waiting time: %d, multiplied: %d\n", bus, waitingTime, bus*waitingTime)
 }
 
 func parseNotes(filename string) (int, []int, error) {
