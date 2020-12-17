@@ -8,6 +8,7 @@ use error::Result;
 use crate::instruction::Instructions;
 
 mod instruction;
+mod state;
 
 fn main() {}
 
