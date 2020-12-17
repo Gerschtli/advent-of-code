@@ -44,6 +44,10 @@ impl Instructions {
 
         Ok(())
     }
+
+    pub(super) fn get_all(&self) -> &[Instruction] {
+        &self.instructions
+    }
 }
 
 #[derive(Debug, PartialEq)]

@@ -6,11 +6,30 @@ extern crate hamcrest2;
 use error::Result;
 
 use crate::instruction::Instructions;
+use crate::state::State;
 
 mod instruction;
 mod state;
 
-fn main() {}
+fn main() -> Result<()> {
+    let distance = get_distance()?;
+
+    println!("manhattan distance: {}", distance);
+
+    Ok(())
+}
+
+fn get_distance() -> Result<i32> {
+    let lines = file::read_lines("./files/instructions.txt")?;
+    let instructions = parse_instructions(&lines)?;
+    let mut state = State::new();
+
+    for instruction in instructions.get_all() {
+        state.apply(instruction);
+    }
+
+    Ok(state.get_manhattan_distance())
+}
 
 fn parse_instructions(lines: &[String]) -> Result<Instructions> {
     let mut instructions = Instructions::new();
@@ -29,6 +48,11 @@ mod tests {
     use crate::instruction::Instruction;
 
     use super::*;
+
+    #[test]
+    fn get_distance_returns_result() {
+        assert_that!(get_distance(), has(962));
+    }
 
     #[test]
     fn parse_instructions_returns_parsed_instructions() {

@@ -16,8 +16,8 @@ impl State {
         }
     }
 
-    pub(super) fn apply(&mut self, instruction: Instruction) {
-        match instruction {
+    pub(super) fn apply(&mut self, instruction: &Instruction) {
+        match *instruction {
             Instruction::North(value) => self.north += value,
             Instruction::East(value) => self.east += value,
             Instruction::South(value) => self.north -= value,
@@ -69,7 +69,7 @@ mod tests {
                     facing: 0,
                 };
 
-                state.apply($input);
+                state.apply(&$input);
 
                 assert_that!(state, equal_to($expected));
             }
@@ -138,7 +138,7 @@ mod tests {
             east: 0,
             facing: 0,
         };
-        state.apply(Instruction::Forward(5));
+        state.apply(&Instruction::Forward(5));
 
         assert_that!(
             state,
@@ -157,7 +157,7 @@ mod tests {
             east: 0,
             facing: 90,
         };
-        state.apply(Instruction::Forward(5));
+        state.apply(&Instruction::Forward(5));
 
         assert_that!(
             state,
@@ -176,7 +176,7 @@ mod tests {
             east: 0,
             facing: 180,
         };
-        state.apply(Instruction::Forward(5));
+        state.apply(&Instruction::Forward(5));
 
         assert_that!(
             state,
@@ -195,7 +195,7 @@ mod tests {
             east: 0,
             facing: 270,
         };
-        state.apply(Instruction::Forward(5));
+        state.apply(&Instruction::Forward(5));
 
         assert_that!(
             state,
