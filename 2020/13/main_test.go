@@ -53,3 +53,12 @@ func TestFindFirstBusReturnsBusLineAndWaitingTime(t *testing.T) {
 	assert.Equal(t, 59, bus)
 	assert.Equal(t, 5, waitingTime)
 }
+
+func TestFindEarliestTimestampWithMatchingOffsetsWorksWithExamples(t *testing.T) {
+	assert.Equal(t, 1068781, findEarliestTimestampWithMatchingOffsets([]int{7, 13, 0, 0, 59, 0, 31, 19}))
+	assert.Equal(t, 3417, findEarliestTimestampWithMatchingOffsets([]int{17, 0, 13, 19}))
+	assert.Equal(t, 754018, findEarliestTimestampWithMatchingOffsets([]int{67, 7, 59, 61}))
+	assert.Equal(t, 779210, findEarliestTimestampWithMatchingOffsets([]int{67, 0, 7, 59, 61}))
+	assert.Equal(t, 1261476, findEarliestTimestampWithMatchingOffsets([]int{67, 7, 0, 59, 61}))
+	assert.Equal(t, 1202161486, findEarliestTimestampWithMatchingOffsets([]int{1789, 37, 47, 1889}))
+}

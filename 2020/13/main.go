@@ -79,3 +79,25 @@ func findFirstBus(timestamp int, busses []int) (int, int) {
 
 	return bus, departureTime - timestamp
 }
+
+func findEarliestTimestampWithMatchingOffsets(busses []int) int {
+	for i := 0; ; i++ {
+		timestamp := busses[0] * i
+		if checkBusOffsets(busses, timestamp) {
+			return timestamp
+		}
+	}
+}
+
+func checkBusOffsets(busses []int, timestamp int) bool {
+	for j, bus := range busses {
+		if bus == 0 {
+			continue
+		}
+		if (timestamp+j)%bus != 0 {
+			return false
+		}
+	}
+
+	return true
+}
