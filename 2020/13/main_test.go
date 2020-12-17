@@ -21,3 +21,27 @@ func TestMainLogsResults(t *testing.T) {
 	assert.Len(t, lines, 1)
 	assert.Empty(t, lines[0])
 }
+
+func TestParseNotesReturnsTimestampAndBusses(t *testing.T) {
+	timestamp, busses, err := parseNotes("./files/example.txt")
+
+	assert.Nil(t, err)
+	assert.Equal(t, 939, timestamp)
+	assert.Equal(t, []int{7, 13, 59, 31, 19}, busses)
+}
+
+func TestParseNotesReturnsErrorForInvalidBusValue(t *testing.T) {
+	_, _, err := parseNotes("./files/example_invalid.txt")
+
+	if assert.NotNil(t, err) {
+		assert.Equal(t, "strconv.Atoi: parsing \"13a\": invalid syntax", err.Error())
+	}
+}
+
+func TestParseNotesReturnsErrorForTooManyLines(t *testing.T) {
+	_, _, err := parseNotes("./files/example_too_many_lines.txt")
+
+	if assert.NotNil(t, err) {
+		assert.Equal(t, "too many lines in file", err.Error())
+	}
+}
