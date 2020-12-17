@@ -81,23 +81,44 @@ func findFirstBus(timestamp int, busses []int) (int, int) {
 }
 
 func findEarliestTimestampWithMatchingOffsets(busses []int) int {
-	for i := 0; ; i++ {
-		timestamp := busses[0] * i
-		if checkBusOffsets(busses, timestamp) {
-			return timestamp
-		}
-	}
-}
-
-func checkBusOffsets(busses []int, timestamp int) bool {
-	for j, bus := range busses {
+	// using https://en.wikipedia.org/wiki/Chinese_remainder_theorem
+	bigM := 1
+	for _, bus := range busses {
 		if bus == 0 {
 			continue
 		}
-		if (timestamp+j)%bus != 0 {
-			return false
-		}
+
+		bigM *= bus
 	}
 
-	return true
+	x := 0
+	for i, bus := range busses {
+		if bus == 0 {
+			continue
+		}
+
+		remainder := absoluteModulo(bus-i, bus)
+		localBigM := bigM / bus
+
+		_, _, t := extendedEuclid(bus, localBigM)
+
+		x += remainder * (t * localBigM)
+	}
+
+	return absoluteModulo(x, bigM)
+}
+
+func absoluteModulo(a, b int) int {
+	return ((a % b) + b) % b
+}
+
+// extendedEuclid returns (greatest common divisor, factor for a, factor for b).
+// See https://en.wikipedia.org/wiki/Extended_Euclidean_algorithm
+func extendedEuclid(a, b int) (int, int, int) {
+	if b == 0 {
+		return a, 1, 0
+	}
+
+	d, s, t := extendedEuclid(b, absoluteModulo(a, b))
+	return d, t, s - t*(a/b)
 }
