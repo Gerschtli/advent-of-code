@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"math"
 	"strconv"
 	"strings"
 
@@ -50,4 +51,18 @@ func parseNotes(filename string) (int, []int, error) {
 	}
 
 	return timestamp, busses, nil
+}
+
+func findFirstBus(timestamp int, busses []int) (int, int) {
+	bus, departureTime := 0, math.MaxInt32
+
+	for _, b := range busses {
+		factor := timestamp / b
+		time := b * (factor + 1)
+		if time < departureTime {
+			bus, departureTime = b, time
+		}
+	}
+
+	return bus, departureTime - timestamp
 }

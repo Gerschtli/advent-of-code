@@ -45,3 +45,10 @@ func TestParseNotesReturnsErrorForTooManyLines(t *testing.T) {
 		assert.Equal(t, "too many lines in file", err.Error())
 	}
 }
+
+func TestFindFirstBusReturnsBusLineAndWaitingTime(t *testing.T) {
+	bus, waitingTime := findFirstBus(939, []int{7, 13, 59, 31, 19})
+
+	assert.Equal(t, 59, bus)
+	assert.Equal(t, 5, waitingTime)
+}
