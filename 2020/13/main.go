@@ -35,6 +35,7 @@ func parseNotes(filename string) (int, []int, error) {
 		} else if counter == 1 {
 			for _, bus := range strings.Split(line, ",") {
 				if bus == "x" {
+					busses = append(busses, 0)
 					continue
 				}
 
@@ -65,6 +66,10 @@ func findFirstBus(timestamp int, busses []int) (int, int) {
 	bus, departureTime := 0, math.MaxInt32
 
 	for _, b := range busses {
+		if b == 0 {
+			continue
+		}
+
 		factor := timestamp / b
 		time := b * (factor + 1)
 		if time < departureTime {

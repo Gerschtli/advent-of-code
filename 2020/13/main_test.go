@@ -28,7 +28,7 @@ func TestParseNotesReturnsTimestampAndBusses(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, 939, timestamp)
-	assert.Equal(t, []int{7, 13, 59, 31, 19}, busses)
+	assert.Equal(t, []int{7, 13, 0, 0, 59, 0, 31, 19}, busses)
 }
 
 func TestParseNotesReturnsErrorForInvalidBusValue(t *testing.T) {
@@ -48,7 +48,7 @@ func TestParseNotesReturnsErrorForTooManyLines(t *testing.T) {
 }
 
 func TestFindFirstBusReturnsBusLineAndWaitingTime(t *testing.T) {
-	bus, waitingTime := findFirstBus(939, []int{7, 13, 59, 31, 19})
+	bus, waitingTime := findFirstBus(939, []int{7, 13, 0, 0, 59, 0, 31, 19})
 
 	assert.Equal(t, 59, bus)
 	assert.Equal(t, 5, waitingTime)
