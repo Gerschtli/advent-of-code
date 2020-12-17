@@ -10,6 +10,7 @@ use crate::state::State;
 
 mod instruction;
 mod state;
+mod state_fixed;
 
 fn main() -> Result<()> {
     let distance = get_distance()?;
