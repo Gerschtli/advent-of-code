@@ -18,6 +18,9 @@ func main() {
 
 	bus, waitingTime := findFirstBus(timestamp, busses)
 	log.Printf("bus: %d, waiting time: %d, multiplied: %d\n", bus, waitingTime, bus*waitingTime)
+
+	timestampMatchingOffsets := findEarliestTimestampWithMatchingOffsets(busses)
+	log.Printf("timestamp matching offsets: %d\n", timestampMatchingOffsets)
 }
 
 func parseNotes(filename string) (int, []int, error) {
