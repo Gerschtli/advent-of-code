@@ -11,7 +11,21 @@ use crate::instruction::{BitMask, Instruction, State};
 
 mod instruction;
 
-fn main() {}
+fn main() -> Result<()> {
+    let sum = evaluate()?;
+
+    println!("sum of all memory values: {}", sum);
+
+    Ok(())
+}
+
+fn evaluate() -> Result<i64> {
+    let lines = file::read_lines("./files/program.txt")?;
+    let instructions = parse_program(&lines)?;
+    let state = run_program(&instructions);
+
+    Ok(state.sum())
+}
 
 fn parse_program(lines: &[String]) -> Result<Vec<Instruction>> {
     let mut instructions = vec![];
@@ -63,6 +77,11 @@ mod tests {
     use hamcrest2::prelude::*;
 
     use super::*;
+
+    #[test]
+    fn evaluate_returns_sum() {
+        assert_that!(evaluate(), has(9967721333886));
+    }
 
     #[test]
     fn parse_program_returns_instructions() {
