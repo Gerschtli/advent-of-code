@@ -81,6 +81,36 @@ impl State {
         }
     }
 
+    pub(crate) fn run_v2(&mut self, instruction: &Instruction) {
+        match &instruction {
+            Instruction::Mask(mask) => self.current_mask = mask.clone(),
+            Instruction::Mem(key, value) => {
+                let mut addresses = vec![*key];
+                for mask in &self.current_mask {
+                    if mask.value == BitValue::Zero {
+                        continue;
+                    }
+
+                    addresses = addresses
+                        .into_iter()
+                        .flat_map(|address| match mask.value {
+                            BitValue::One => vec![set_bit(address, mask.key, true)],
+                            BitValue::Zero => vec![address],
+                            BitValue::Floating => vec![
+                                set_bit(address, mask.key, true),
+                                set_bit(address, mask.key, false),
+                            ],
+                        })
+                        .collect();
+                }
+
+                for address in addresses {
+                    self.memory.insert(address, *value);
+                }
+            }
+        }
+    }
+
     pub(super) fn sum(&self) -> i64 {
         self.memory.values().map(|value| *value).sum()
     }
@@ -144,6 +174,62 @@ mod tests {
                 memory: map,
             })
         );
+    }
+
+    #[test]
+    fn state_run_v2_sets_mask() {
+        let mut state = State {
+            current_mask: vec![BitMask {
+                key: 1,
+                value: BitValue::One,
+            }],
+            memory: HashMap::new(),
+        };
+
+        state.run_v2(&Instruction::Mask(vec![BitMask {
+            key: 5,
+            value: BitValue::Zero,
+        }]));
+
+        assert_that!(
+            state,
+            equal_to(State {
+                current_mask: vec![BitMask {
+                    key: 5,
+                    value: BitValue::Zero
+                }],
+                memory: HashMap::new(),
+            })
+        );
+    }
+
+    #[test]
+    fn state_run_v2_sets_memory() {
+        let mut state = State {
+            current_mask: vec![
+                BitMask::new(9, BitValue::Zero),
+                BitMask::new(8, BitValue::Zero),
+                BitMask::new(7, BitValue::Zero),
+                BitMask::new(6, BitValue::Zero),
+                BitMask::new(5, BitValue::Floating),
+                BitMask::new(4, BitValue::One),
+                BitMask::new(3, BitValue::Zero),
+                BitMask::new(2, BitValue::Zero),
+                BitMask::new(1, BitValue::One),
+                BitMask::new(0, BitValue::Floating),
+            ],
+            memory: HashMap::new(),
+        };
+
+        state.run_v2(&Instruction::Mem(42, 100));
+
+        let mut map = HashMap::new();
+        map.insert(26, 100);
+        map.insert(27, 100);
+        map.insert(58, 100);
+        map.insert(59, 100);
+
+        assert_that!(state.memory, equal_to(map));
     }
 
     #[test]
