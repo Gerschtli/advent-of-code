@@ -1,5 +1,18 @@
 use std::collections::HashMap;
 
+fn set_bit(number: i64, position: i64, value: bool) -> i64 {
+    let bit = 1 << position;
+    let has_bit = number & bit != 0;
+
+    return if !has_bit && value {
+        number + bit
+    } else if has_bit && !value {
+        number - bit
+    } else {
+        number
+    };
+}
+
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub(super) enum BitValue {
     One,
@@ -54,14 +67,13 @@ impl State {
                 let mut final_value = *value;
 
                 for mask in &self.current_mask {
-                    let bit = 1 << mask.key;
-                    let has_bit = final_value & bit == 0;
+                    let value = match mask.value {
+                        BitValue::One => true,
+                        BitValue::Zero => false,
+                        BitValue::Floating => continue,
+                    };
 
-                    if has_bit && mask.value == BitValue::One {
-                        final_value += bit;
-                    } else if !has_bit && mask.value == BitValue::Zero {
-                        final_value -= bit;
-                    }
+                    final_value = set_bit(final_value, mask.key, value);
                 }
 
                 self.memory.insert(*key, final_value);
