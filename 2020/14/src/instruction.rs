@@ -4,13 +4,13 @@ fn set_bit(number: i64, position: i64, value: bool) -> i64 {
     let bit = 1 << position;
     let has_bit = number & bit != 0;
 
-    return if !has_bit && value {
+    if !has_bit && value {
         number + bit
     } else if has_bit && !value {
         number - bit
     } else {
         number
-    };
+    }
 }
 
 #[derive(Clone, Copy, Debug, PartialEq)]
@@ -112,7 +112,7 @@ impl State {
     }
 
     pub(super) fn sum(&self) -> i64 {
-        self.memory.values().map(|value| *value).sum()
+        self.memory.values().sum()
     }
 }
 
