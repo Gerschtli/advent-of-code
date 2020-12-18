@@ -3,32 +3,35 @@ package main
 import "log"
 
 func main() {
-	number := getNumber([]int{16, 12, 1, 0, 15, 7, 11}, 2020)
-	log.Printf("2020th number: %d\n", number)
+	starting := []int{16, 12, 1, 0, 15, 7, 11}
+	number2020 := getNumber(starting, 2020)
+	number30000000 := getNumber(starting, 30000000)
+
+	log.Printf("2020th number: %d\n", number2020)
+	log.Printf("30000000th number: %d\n", number30000000)
 }
 
 func getNumber(starting []int, limit int) int {
-	numbers := starting
+	numberIndexes := make(map[int]int)
+	for i, v := range starting {
+		if i == len(starting)-1 {
+			break
+		}
+		numberIndexes[v] = i
+	}
 
-	for i := len(starting) - 1; i < limit; i++ {
-		lastNumber := numbers[i]
-		lastOccurrence, found := getLastOccurrence(lastNumber, numbers[:i])
+	lastNumber := starting[len(starting)-1]
+	for i := len(starting); i < limit; i++ {
+		lastIndex := i - 1
+		lastOccurrence, found := numberIndexes[lastNumber]
+		numberIndexes[lastNumber] = lastIndex
+
 		if found {
-			numbers = append(numbers, i-lastOccurrence)
+			lastNumber = lastIndex - lastOccurrence
 		} else {
-			numbers = append(numbers, 0)
+			lastNumber = 0
 		}
 	}
 
-	return numbers[limit-1]
-}
-
-func getLastOccurrence(needle int, haystack []int) (int, bool) {
-	for i := len(haystack) - 1; i >= 0; i-- {
-		if haystack[i] == needle {
-			return i, true
-		}
-	}
-
-	return 0, false
+	return lastNumber
 }
