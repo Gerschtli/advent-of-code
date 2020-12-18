@@ -16,7 +16,7 @@ impl Point {
         match (angle + 360) % 360 {
             90 => {
                 let north = self.north;
-                self.north = self.east * -1;
+                self.north = -self.east;
                 self.east = north;
             }
             180 => {
@@ -26,7 +26,7 @@ impl Point {
             270 => {
                 let north = self.north;
                 self.north = self.east;
-                self.east = north * -1;
+                self.east = -north;
             }
             _ => (),
         }
@@ -53,7 +53,7 @@ impl StateFixed {
             Instruction::East(value) => self.waypoint.east += value,
             Instruction::South(value) => self.waypoint.north -= value,
             Instruction::West(value) => self.waypoint.east -= value,
-            Instruction::Left(value) => self.waypoint.rotate(value * -1),
+            Instruction::Left(value) => self.waypoint.rotate(-value),
             Instruction::Right(value) => self.waypoint.rotate(value),
             Instruction::Forward(value) => self.position.add(&self.waypoint, value),
         }
