@@ -12,19 +12,21 @@ use crate::instruction::{BitMask, BitValue, Instruction, State};
 mod instruction;
 
 fn main() -> Result<()> {
-    let sum = evaluate()?;
+    let (sum, sum_v2) = evaluate()?;
 
     println!("sum of all memory values: {}", sum);
+    println!("sum of all memory values (v2): {}", sum_v2);
 
     Ok(())
 }
 
-fn evaluate() -> Result<i64> {
+fn evaluate() -> Result<(i64, i64)> {
     let lines = file::read_lines("./files/program.txt")?;
     let instructions = parse_program(&lines)?;
     let state = run_program(&instructions);
+    let state_v2 = run_program_v2(&instructions);
 
-    Ok(state.sum())
+    Ok((state.sum(), state_v2.sum()))
 }
 
 fn parse_program(lines: &[String]) -> Result<Vec<Instruction>> {
@@ -73,6 +75,16 @@ fn run_program(instructions: &[Instruction]) -> State {
     state
 }
 
+fn run_program_v2(instructions: &[Instruction]) -> State {
+    let mut state = State::new();
+
+    for instruction in instructions {
+        state.run_v2(instruction);
+    }
+
+    state
+}
+
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
@@ -83,7 +95,7 @@ mod tests {
 
     #[test]
     fn evaluate_returns_sum() {
-        assert_that!(evaluate(), has(9967721333886));
+        assert_that!(evaluate(), has((9967721333886, 4355897790573)));
     }
 
     #[test]
