@@ -11,6 +11,7 @@ index 0000000..6b39cd6
 +replace github.com/Gerschtli/advent-of-code/lib/go/file => ../../lib/go/file
 +
 +require github.com/stretchr/testify v1.6.1
++
 +require github.com/Gerschtli/advent-of-code/lib/go/file v0.1.0
 diff --git a/YEAR/DAY/main.go b/YEAR/DAY/main.go
 new file mode 100644
