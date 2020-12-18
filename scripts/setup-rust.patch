@@ -22,6 +22,9 @@ index 0000000..955902b
 --- /dev/null
 +++ b/YEAR/DAY/src/main.rs
 @@ -0,0 +1,13 @@
++#![deny(warnings)]
++#![allow(unused_imports)]
++
 +// necessary for intellij support
 +#[cfg(test)]
 +#[macro_use]
