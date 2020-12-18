@@ -111,12 +111,15 @@ impl Passport {
                 let capture_value = captures.get(1);
                 let capture_unit = captures.get(2);
 
-                if capture_value.is_none() || capture_unit.is_none() {
-                    false
-                } else if capture_unit.unwrap().as_str() == "cm" {
-                    Passport::is_in_range(capture_value.unwrap().as_str(), 150, 193)
-                } else {
-                    Passport::is_in_range(capture_value.unwrap().as_str(), 59, 76)
+                match (capture_value, capture_unit) {
+                    (Some(value), Some(unit)) => {
+                        if unit.as_str() == "cm" {
+                            Passport::is_in_range(value.as_str(), 150, 193)
+                        } else {
+                            Passport::is_in_range(value.as_str(), 59, 76)
+                        }
+                    }
+                    _ => false,
                 }
             }
             None => false,
@@ -140,10 +143,7 @@ impl Passport {
     }
 
     pub(super) fn with_ecl(&self, value: &str) -> Self {
-        let valid = match value {
-            "amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth" => true,
-            _ => false,
-        };
+        let valid = matches!(value, "amb" | "blu" | "brn" | "gry" | "grn" | "hzl" | "oth");
 
         let mut new = self.clone();
         new.ecl = PassportValue::init_present(valid);
