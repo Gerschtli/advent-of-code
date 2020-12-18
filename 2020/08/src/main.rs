@@ -55,7 +55,7 @@ fn get_accumulator(code: &Code, expected_result: RunResult) -> Result<i32> {
 
     loop {
         match state.run() {
-            result if &result == &expected_result => return Ok(state.get_accumulator()),
+            result if result == expected_result => return Ok(state.get_accumulator()),
             RunResult::Success => (),
             RunResult::InvalidInstruction => {
                 return Err(AppError::init("invalid instruction found"));
