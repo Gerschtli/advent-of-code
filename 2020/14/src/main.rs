@@ -7,7 +7,7 @@ use error::Result;
 use lazy_static::lazy_static;
 use regex::Regex;
 
-use crate::instruction::{BitMask, Instruction, State};
+use crate::instruction::{BitMask, BitValue, Instruction, State};
 
 mod instruction;
 
@@ -45,7 +45,12 @@ fn parse_program(lines: &[String]) -> Result<Vec<Instruction>> {
                     continue;
                 }
 
-                masks.push(BitMask::new(35 - i, char == '1'));
+                let value = if char == '1' {
+                    BitValue::One
+                } else {
+                    BitValue::Zero
+                };
+                masks.push(BitMask::new(35 - i, value));
             }
 
             instructions.push(Instruction::Mask(masks));
@@ -93,7 +98,10 @@ mod tests {
         ]);
 
         let expected = vec![
-            Instruction::Mask(vec![BitMask::new(6, true), BitMask::new(1, false)]),
+            Instruction::Mask(vec![
+                BitMask::new(6, BitValue::One),
+                BitMask::new(1, BitValue::Zero),
+            ]),
             Instruction::Mem(8, 11),
             Instruction::Mem(7, 101),
             Instruction::Mem(8, 0),
@@ -106,7 +114,10 @@ mod tests {
     #[test]
     fn run_program_returns_state() {
         let result = run_program(&vec![
-            Instruction::Mask(vec![BitMask::new(6, true), BitMask::new(1, false)]),
+            Instruction::Mask(vec![
+                BitMask::new(6, BitValue::One),
+                BitMask::new(1, BitValue::Zero),
+            ]),
             Instruction::Mem(8, 11),
             Instruction::Mem(7, 101),
             Instruction::Mem(8, 0),
@@ -119,7 +130,10 @@ mod tests {
         assert_that!(
             result,
             equal_to(State::init(
-                vec![BitMask::new(6, true), BitMask::new(1, false)],
+                vec![
+                    BitMask::new(6, BitValue::One),
+                    BitMask::new(1, BitValue::Zero),
+                ],
                 map
             ))
         );

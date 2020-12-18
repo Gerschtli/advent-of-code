@@ -1,13 +1,20 @@
 use std::collections::HashMap;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
+pub(super) enum BitValue {
+    One,
+    Zero,
+    Floating,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub(super) struct BitMask {
     key: usize,
-    value: bool,
+    value: BitValue,
 }
 
 impl BitMask {
-    pub(super) fn new(key: usize, value: bool) -> Self {
+    pub(super) fn new(key: usize, value: BitValue) -> Self {
         Self { key, value }
     }
 }
@@ -50,9 +57,9 @@ impl State {
                     let bit = 1 << mask.key;
                     let has_bit = final_value & bit == 0;
 
-                    if has_bit && mask.value {
+                    if has_bit && mask.value == BitValue::One {
                         final_value += bit;
-                    } else if !has_bit && !mask.value {
+                    } else if !has_bit && mask.value == BitValue::Zero {
                         final_value -= bit;
                     }
                 }
@@ -78,14 +85,14 @@ mod tests {
         let mut state = State {
             current_mask: vec![BitMask {
                 key: 1,
-                value: true,
+                value: BitValue::One,
             }],
             memory: HashMap::new(),
         };
 
         state.run(&Instruction::Mask(vec![BitMask {
             key: 5,
-            value: false,
+            value: BitValue::Zero,
         }]));
 
         assert_that!(
@@ -93,7 +100,7 @@ mod tests {
             equal_to(State {
                 current_mask: vec![BitMask {
                     key: 5,
-                    value: false
+                    value: BitValue::Zero
                 }],
                 memory: HashMap::new(),
             })
@@ -103,7 +110,10 @@ mod tests {
     #[test]
     fn state_run_sets_memory() {
         let mut state = State {
-            current_mask: vec![BitMask::new(6, true), BitMask::new(1, false)],
+            current_mask: vec![
+                BitMask::new(6, BitValue::One),
+                BitMask::new(1, BitValue::Zero),
+            ],
             memory: HashMap::new(),
         };
 
@@ -115,7 +125,10 @@ mod tests {
         assert_that!(
             state,
             equal_to(State {
-                current_mask: vec![BitMask::new(6, true), BitMask::new(1, false)],
+                current_mask: vec![
+                    BitMask::new(6, BitValue::One),
+                    BitMask::new(1, BitValue::Zero)
+                ],
                 memory: map,
             })
         );
@@ -128,7 +141,10 @@ mod tests {
         map.insert(8, 64);
 
         let state = State {
-            current_mask: vec![BitMask::new(6, true), BitMask::new(1, false)],
+            current_mask: vec![
+                BitMask::new(6, BitValue::One),
+                BitMask::new(1, BitValue::Zero),
+            ],
             memory: map,
         };
 
