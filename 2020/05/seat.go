@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -16,7 +15,7 @@ func (s *seat) id() int {
 
 func buildSeatByCode(code string) (seat, error) {
 	if len(code) != 10 {
-		return seat{}, errors.New(fmt.Sprintf("code invalid: need 10 chars [%v]", code))
+		return seat{}, fmt.Errorf("code invalid: need 10 chars [%v]", code)
 	}
 
 	row, err := getCodeValue(code, code[:7], 127, 'F', 'B')
@@ -42,7 +41,7 @@ func getCodeValue(code string, codePart string, high int, charLow int32, charHig
 		case charLow:
 			high -= step
 		default:
-			return 0, errors.New(fmt.Sprintf("code invalid: invalid char, need %c or %c [%v]", charLow, charHigh, code))
+			return 0, fmt.Errorf("code invalid: invalid char, need %c or %c [%v]", charLow, charHigh, code)
 		}
 	}
 

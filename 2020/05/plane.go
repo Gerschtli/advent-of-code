@@ -6,10 +6,10 @@ type plane struct {
 }
 
 func buildPlane(maxRows int, maxColumns int) plane {
-	seats := make([][]bool, maxRows, maxRows)
+	seats := make([][]bool, maxRows)
 
 	for r := range seats {
-		seats[r] = make([]bool, maxColumns, maxColumns)
+		seats[r] = make([]bool, maxColumns)
 	}
 
 	return plane{seats, 0}
