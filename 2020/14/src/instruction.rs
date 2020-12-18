@@ -1,4 +1,6 @@
-#[derive(Debug, PartialEq)]
+use std::collections::HashMap;
+
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub(super) struct BitMask {
     key: usize,
     value: bool,
@@ -14,4 +16,123 @@ impl BitMask {
 pub(super) enum Instruction {
     Mask(Vec<BitMask>),
     Mem(usize, i64),
+}
+
+#[derive(Debug, PartialEq)]
+pub(super) struct State {
+    current_mask: Vec<BitMask>,
+    memory: HashMap<usize, i64>,
+}
+
+impl State {
+    pub(super) fn new() -> Self {
+        Self {
+            current_mask: Vec::new(),
+            memory: HashMap::new(),
+        }
+    }
+
+    #[cfg(test)]
+    pub(super) fn init(current_mask: Vec<BitMask>, memory: HashMap<usize, i64>) -> Self {
+        Self {
+            current_mask,
+            memory,
+        }
+    }
+
+    pub(crate) fn run(&mut self, instruction: &Instruction) {
+        match &instruction {
+            Instruction::Mask(mask) => self.current_mask = mask.clone(),
+            Instruction::Mem(key, value) => {
+                let mut final_value = *value;
+
+                for mask in &self.current_mask {
+                    let bit = 1 << mask.key;
+                    let has_bit = final_value & bit == 0;
+
+                    if has_bit && mask.value {
+                        final_value += bit;
+                    } else if !has_bit && !mask.value {
+                        final_value -= bit;
+                    }
+                }
+
+                self.memory.insert(*key, final_value);
+            }
+        }
+    }
+
+    pub(super) fn sum(&self) -> i64 {
+        self.memory.values().map(|value| *value).sum()
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use hamcrest2::prelude::*;
+
+    use super::*;
+
+    #[test]
+    fn state_run_sets_mask() {
+        let mut state = State {
+            current_mask: vec![BitMask {
+                key: 1,
+                value: true,
+            }],
+            memory: HashMap::new(),
+        };
+
+        state.run(&Instruction::Mask(vec![BitMask {
+            key: 5,
+            value: false,
+        }]));
+
+        assert_that!(
+            state,
+            equal_to(State {
+                current_mask: vec![BitMask {
+                    key: 5,
+                    value: false
+                }],
+                memory: HashMap::new(),
+            })
+        );
+    }
+
+    #[test]
+    fn state_run_sets_memory() {
+        let mut state = State {
+            current_mask: vec![BitMask::new(6, true), BitMask::new(1, false)],
+            memory: HashMap::new(),
+        };
+
+        state.run(&Instruction::Mem(8, 11));
+
+        let mut map = HashMap::new();
+        map.insert(8, 73);
+
+        assert_that!(
+            state,
+            equal_to(State {
+                current_mask: vec![BitMask::new(6, true), BitMask::new(1, false)],
+                memory: map,
+            })
+        );
+    }
+
+    #[test]
+    fn state_sum_returns_sum_of_all_memory_values() {
+        let mut map = HashMap::new();
+        map.insert(7, 101);
+        map.insert(8, 64);
+
+        let state = State {
+            current_mask: vec![BitMask::new(6, true), BitMask::new(1, false)],
+            memory: map,
+        };
+
+        let result = state.sum();
+        assert_that!(result, equal_to(165));
+    }
 }
