@@ -41,15 +41,13 @@ fn parse_program(lines: &[String]) -> Result<Vec<Instruction>> {
             let mut masks = vec![];
 
             for (i, char) in mask.chars().into_iter().enumerate() {
-                if char == 'X' {
-                    continue;
-                }
-
-                let value = if char == '1' {
-                    BitValue::One
-                } else {
-                    BitValue::Zero
+                let value = match char {
+                    '1' => BitValue::One,
+                    '0' => BitValue::Zero,
+                    'X' => BitValue::Floating,
+                    _ => continue,
                 };
+
                 masks.push(BitMask::new(35 - i, value));
             }
 
@@ -99,8 +97,42 @@ mod tests {
 
         let expected = vec![
             Instruction::Mask(vec![
+                BitMask::new(35, BitValue::Floating),
+                BitMask::new(34, BitValue::Floating),
+                BitMask::new(33, BitValue::Floating),
+                BitMask::new(32, BitValue::Floating),
+                BitMask::new(31, BitValue::Floating),
+                BitMask::new(30, BitValue::Floating),
+                BitMask::new(29, BitValue::Floating),
+                BitMask::new(28, BitValue::Floating),
+                BitMask::new(27, BitValue::Floating),
+                BitMask::new(26, BitValue::Floating),
+                BitMask::new(25, BitValue::Floating),
+                BitMask::new(24, BitValue::Floating),
+                BitMask::new(23, BitValue::Floating),
+                BitMask::new(22, BitValue::Floating),
+                BitMask::new(21, BitValue::Floating),
+                BitMask::new(20, BitValue::Floating),
+                BitMask::new(19, BitValue::Floating),
+                BitMask::new(18, BitValue::Floating),
+                BitMask::new(17, BitValue::Floating),
+                BitMask::new(16, BitValue::Floating),
+                BitMask::new(15, BitValue::Floating),
+                BitMask::new(14, BitValue::Floating),
+                BitMask::new(13, BitValue::Floating),
+                BitMask::new(12, BitValue::Floating),
+                BitMask::new(11, BitValue::Floating),
+                BitMask::new(10, BitValue::Floating),
+                BitMask::new(9, BitValue::Floating),
+                BitMask::new(8, BitValue::Floating),
+                BitMask::new(7, BitValue::Floating),
                 BitMask::new(6, BitValue::One),
+                BitMask::new(5, BitValue::Floating),
+                BitMask::new(4, BitValue::Floating),
+                BitMask::new(3, BitValue::Floating),
+                BitMask::new(2, BitValue::Floating),
                 BitMask::new(1, BitValue::Zero),
+                BitMask::new(0, BitValue::Floating),
             ]),
             Instruction::Mem(8, 11),
             Instruction::Mem(7, 101),
