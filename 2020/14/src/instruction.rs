@@ -9,12 +9,12 @@ pub(super) enum BitValue {
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub(super) struct BitMask {
-    key: usize,
+    key: i64,
     value: BitValue,
 }
 
 impl BitMask {
-    pub(super) fn new(key: usize, value: BitValue) -> Self {
+    pub(super) fn new(key: i64, value: BitValue) -> Self {
         Self { key, value }
     }
 }
@@ -22,13 +22,13 @@ impl BitMask {
 #[derive(Debug, PartialEq)]
 pub(super) enum Instruction {
     Mask(Vec<BitMask>),
-    Mem(usize, i64),
+    Mem(i64, i64),
 }
 
 #[derive(Debug, PartialEq)]
 pub(super) struct State {
     current_mask: Vec<BitMask>,
-    memory: HashMap<usize, i64>,
+    memory: HashMap<i64, i64>,
 }
 
 impl State {
@@ -40,7 +40,7 @@ impl State {
     }
 
     #[cfg(test)]
-    pub(super) fn init(current_mask: Vec<BitMask>, memory: HashMap<usize, i64>) -> Self {
+    pub(super) fn init(current_mask: Vec<BitMask>, memory: HashMap<i64, i64>) -> Self {
         Self {
             current_mask,
             memory,

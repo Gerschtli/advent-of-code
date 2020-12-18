@@ -48,12 +48,12 @@ fn parse_program(lines: &[String]) -> Result<Vec<Instruction>> {
                     _ => continue,
                 };
 
-                masks.push(BitMask::new(35 - i, value));
+                masks.push(BitMask::new(35 - i as i64, value));
             }
 
             instructions.push(Instruction::Mask(masks));
         } else if let Some(captures) = RE_MEM.captures(line) {
-            let key = captures.get(1).unwrap().as_str().parse::<usize>()?;
+            let key = captures.get(1).unwrap().as_str().parse::<i64>()?;
             let value = captures.get(2).unwrap().as_str().parse::<i64>()?;
 
             instructions.push(Instruction::Mem(key, value));
