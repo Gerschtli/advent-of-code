@@ -49,6 +49,12 @@ jobs:
           version: v1.30
           working-directory: ${{ matrix.directory }}
 
+      - name: Run go mod tidy
+        run: |
+          go mod tidy -v
+          git diff --exit-code
+        working-directory: ${{ matrix.directory }}
+
       - name: Run go test
         run: go test -v ./...
         working-directory: ${{ matrix.directory }}
