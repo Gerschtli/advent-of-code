@@ -7,7 +7,7 @@ use error::Result;
 use lazy_static::lazy_static;
 use regex::Regex;
 
-use crate::instruction::{BitMask, Instruction};
+use crate::instruction::{BitMask, Instruction, State};
 
 mod instruction;
 
@@ -46,8 +46,20 @@ fn parse_program(lines: &[String]) -> Result<Vec<Instruction>> {
     Ok(instructions)
 }
 
+fn run_program(instructions: &[Instruction]) -> State {
+    let mut state = State::new();
+
+    for instruction in instructions {
+        state.run(instruction);
+    }
+
+    state
+}
+
 #[cfg(test)]
 mod tests {
+    use std::collections::HashMap;
+
     use hamcrest2::prelude::*;
 
     use super::*;
@@ -70,5 +82,27 @@ mod tests {
 
         assert_that!(&result, ok());
         assert_that!(result, has(expected));
+    }
+
+    #[test]
+    fn run_program_returns_state() {
+        let result = run_program(&vec![
+            Instruction::Mask(vec![BitMask::new(6, true), BitMask::new(1, false)]),
+            Instruction::Mem(8, 11),
+            Instruction::Mem(7, 101),
+            Instruction::Mem(8, 0),
+        ]);
+
+        let mut map = HashMap::new();
+        map.insert(7, 101);
+        map.insert(8, 64);
+
+        assert_that!(
+            result,
+            equal_to(State::init(
+                vec![BitMask::new(6, true), BitMask::new(1, false)],
+                map
+            ))
+        );
     }
 }
