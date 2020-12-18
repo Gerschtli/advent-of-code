@@ -1,6 +1,4 @@
 diff --git a/YEAR/DAY/Cargo.toml b/YEAR/DAY/Cargo.toml
-new file mode 100644
-index 0000000..cff40c2
 --- /dev/null
 +++ b/YEAR/DAY/Cargo.toml
 @@ -0,0 +1,12 @@
@@ -17,11 +15,9 @@ index 0000000..cff40c2
 +[dev-dependencies]
 +hamcrest2 = "0.3.0"
 diff --git a/YEAR/DAY/src/main.rs b/YEAR/DAY/src/main.rs
-new file mode 100644
-index 0000000..955902b
 --- /dev/null
 +++ b/YEAR/DAY/src/main.rs
-@@ -0,0 +1,13 @@
+@@ -0,0 +1,16 @@
 +#![deny(warnings)]
 +#![allow(unused_imports)]
 +

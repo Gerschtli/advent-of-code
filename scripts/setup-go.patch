@@ -1,9 +1,7 @@
 diff --git a/YEAR/DAY/go.mod b/YEAR/DAY/go.mod
-new file mode 100644
-index 0000000..6b39cd6
 --- /dev/null
 +++ b/YEAR/DAY/go.mod
-@@ -0,0 +1,8 @@
+@@ -0,0 +1,9 @@
 +module github.com/Gerschtli/advent-of-code/YEAR/DAY
 +
 +go 1.15
@@ -14,8 +12,6 @@ index 0000000..6b39cd6
 +
 +require github.com/Gerschtli/advent-of-code/lib/go/file v0.1.0
 diff --git a/YEAR/DAY/main.go b/YEAR/DAY/main.go
-new file mode 100644
-index 0000000..da29a2c
 --- /dev/null
 +++ b/YEAR/DAY/main.go
 @@ -0,0 +1,4 @@
@@ -24,8 +20,6 @@ index 0000000..da29a2c
 +func main() {
 +}
 diff --git a/YEAR/DAY/main_test.go b/YEAR/DAY/main_test.go
-new file mode 100644
-index 0000000..9b23f30
 --- /dev/null
 +++ b/YEAR/DAY/main_test.go
 @@ -0,0 +1,23 @@
