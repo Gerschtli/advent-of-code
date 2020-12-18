@@ -18,7 +18,7 @@ pub(super) fn find_chain(adapters: &[i32]) -> i32 {
         last_adapter = *adapter;
     }
 
-    return diff_1_jolt * diff_3_jolts;
+    diff_1_jolt * diff_3_jolts
 }
 
 pub(super) fn get_chain_count(adapters: &[i32]) -> i64 {

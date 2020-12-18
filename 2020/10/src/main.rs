@@ -36,7 +36,7 @@ fn parse_lines(lines: &[String]) -> Result<Vec<i32>> {
         .map(|line| line.parse())
         .collect::<result::Result<Vec<_>, _>>()?;
 
-    numbers.sort();
+    numbers.sort_unstable();
 
     Ok(numbers)
 }
