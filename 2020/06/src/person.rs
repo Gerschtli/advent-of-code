@@ -43,7 +43,7 @@ impl Person {
     }
 
     pub(super) fn get_answer_intersection_count(persons: &[Person]) -> usize {
-        if persons.len() == 0 {
+        if persons.is_empty() {
             return 0;
         }
 
