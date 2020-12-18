@@ -46,7 +46,7 @@ func loadMap(filename string) (Map, error) {
 			case '#':
 				isBlocked = true
 			default:
-				return errors.New(fmt.Sprintf("unknown char found: %q", char))
+				return fmt.Errorf("unknown char found: %q", char)
 			}
 
 			m[index] = append(m[index], isBlocked)
