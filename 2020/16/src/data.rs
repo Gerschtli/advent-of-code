@@ -25,6 +25,10 @@ impl Rule {
 
         false
     }
+
+    pub(super) fn name(&self) -> &str {
+        &self.name
+    }
 }
 
 #[derive(Debug, PartialEq)]

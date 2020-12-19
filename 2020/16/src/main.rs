@@ -19,21 +19,31 @@ use crate::data::{Rule, Ticket};
 mod data;
 
 fn main() -> Result<()> {
-    let error_rate = run()?;
+    let (error_rate, departure_values) = run()?;
 
     println!("error rate: {}", error_rate);
+    println!("departure values: {}", departure_values);
 
     Ok(())
 }
 
-fn run() -> Result<i32> {
+fn run() -> Result<(i32, i64)> {
     let lines = file::read_lines("./files/tickets.txt")?;
     let (rules, my_ticket, tickets) = parse_lines(&lines)?;
+
     let error_rate = get_error_rate(&rules, &tickets);
+
     let mut filtered_tickets = filter_invalid_tickets(&rules, &tickets);
     filtered_tickets.push(&my_ticket);
 
-    Ok(error_rate)
+    let field_mapping = get_field_mapping(&rules, &filtered_tickets);
+    let departure_values = field_mapping
+        .iter()
+        .filter(|(rule, _)| rule.name().starts_with("departure "))
+        .map(|(_, index)| my_ticket.values()[*index])
+        .fold(1_i64, |acc, v| acc * v as i64);
+
+    Ok((error_rate, departure_values))
 }
 
 fn parse_lines(lines: &[String]) -> Result<(Vec<Rule>, Ticket, Vec<Ticket>)> {
@@ -165,8 +175,8 @@ mod tests {
     use super::*;
 
     #[test]
-    fn run_returns_error_rate() {
-        assert_that!(run(), has(23954));
+    fn run_returns_values() {
+        assert_that!(run(), has((23954, 453459307723)));
     }
 
     #[test]
