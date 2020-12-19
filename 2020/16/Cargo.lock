@@ -7,6 +7,8 @@ dependencies = [
  "error",
  "file",
  "hamcrest2",
+ "lazy_static",
+ "regex",
 ]
 
 [[package]]
