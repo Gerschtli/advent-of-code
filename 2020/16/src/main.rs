@@ -27,8 +27,10 @@ fn main() -> Result<()> {
 
 fn run() -> Result<i32> {
     let lines = file::read_lines("./files/tickets.txt")?;
-    let (rules, _, tickets) = parse_lines(&lines)?;
+    let (rules, my_ticket, tickets) = parse_lines(&lines)?;
     let error_rate = get_error_rate(&rules, &tickets);
+    let mut filtered_tickets = filter_invalid_tickets(&rules, &tickets);
+    filtered_tickets.push(&my_ticket);
 
     Ok(error_rate)
 }
@@ -98,6 +100,13 @@ fn get_error_rate(rules: &[Rule], tickets: &[Ticket]) -> i32 {
         .sum()
 }
 
+fn filter_invalid_tickets<'a>(rules: &[Rule], tickets: &'a [Ticket]) -> Vec<&'a Ticket> {
+    tickets
+        .iter()
+        .filter(|ticket| ticket.is_valid_for_any_rule(rules).0)
+        .collect()
+}
+
 #[cfg(test)]
 mod tests {
     use hamcrest2::prelude::*;
@@ -165,5 +174,26 @@ mod tests {
         );
 
         assert_that!(result, equal_to(71));
+    }
+
+    #[test]
+    fn filter_invalid_tickets_returns_sliced_tickets() {
+        let tickets = vec![
+            Ticket::new(vec![7, 3, 47]),
+            Ticket::new(vec![40, 4, 50]),
+            Ticket::new(vec![55, 2, 20]),
+            Ticket::new(vec![38, 6, 12]),
+        ];
+        let result = filter_invalid_tickets(
+            &vec![
+                Rule::new("class", vec![(1, 3), (5, 7)]),
+                Rule::new("row", vec![(6, 11), (33, 44)]),
+                Rule::new("seat", vec![(13, 40), (45, 50)]),
+            ],
+            &tickets,
+        );
+
+        let ticket = Ticket::new(vec![7, 3, 47]);
+        assert_that!(result, equal_to(vec![&ticket]));
     }
 }
