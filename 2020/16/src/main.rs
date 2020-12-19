@@ -74,6 +74,16 @@ fn parse_ticket(line: &str) -> Result<Ticket> {
     Ok(Ticket::new(values))
 }
 
+fn get_error_rate(rules: &[Rule], tickets: &[Ticket]) -> i32 {
+    tickets
+        .iter()
+        .map(|ticket| match ticket.is_valid_for_any_rule(rules) {
+            (true, _) => 0,
+            (false, value) => value,
+        })
+        .sum()
+}
+
 #[cfg(test)]
 mod tests {
     use hamcrest2::prelude::*;
@@ -117,5 +127,24 @@ mod tests {
                 ],
             ))
         );
+    }
+
+    #[test]
+    fn get_error_rate_returns_sum_of_errors() {
+        let result = get_error_rate(
+            &vec![
+                Rule::new("class", vec![(1, 3), (5, 7)]),
+                Rule::new("row", vec![(6, 11), (33, 44)]),
+                Rule::new("seat", vec![(13, 40), (45, 50)]),
+            ],
+            &vec![
+                Ticket::new(vec![7, 3, 47]),
+                Ticket::new(vec![40, 4, 50]),
+                Ticket::new(vec![55, 2, 20]),
+                Ticket::new(vec![38, 6, 12]),
+            ],
+        );
+
+        assert_that!(result, equal_to(71));
     }
 }
