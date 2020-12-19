@@ -99,7 +99,7 @@ jobs:
             ${{ runner.os }}-cargo-
 
       - name: Check coding style
-        run: echo $(pwd); cargo fmt --verbose -- --check
+        run: cargo fmt --verbose -- --check
         working-directory: ${{ matrix.directory }}
 
       - name: Run cargo check
