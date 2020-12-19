@@ -17,7 +17,21 @@ use crate::data::{Rule, Ticket};
 
 mod data;
 
-fn main() {}
+fn main() -> Result<()> {
+    let error_rate = run()?;
+
+    println!("error rate: {}", error_rate);
+
+    Ok(())
+}
+
+fn run() -> Result<i32> {
+    let lines = file::read_lines("./files/tickets.txt")?;
+    let (rules, _, tickets) = parse_lines(&lines)?;
+    let error_rate = get_error_rate(&rules, &tickets);
+
+    Ok(error_rate)
+}
 
 fn parse_lines(lines: &[String]) -> Result<(Vec<Rule>, Ticket, Vec<Ticket>)> {
     let (rules, index) = parse_rules(lines);
@@ -89,6 +103,11 @@ mod tests {
     use hamcrest2::prelude::*;
 
     use super::*;
+
+    #[test]
+    fn run_returns_error_rate() {
+        assert_that!(run(), has(23954));
+    }
 
     #[test]
     fn parse_lines_returns_all_data() {
