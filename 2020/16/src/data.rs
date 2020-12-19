@@ -1,4 +1,4 @@
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub(super) struct Rule {
     name: String,
     ranges: Vec<(i32, i32)>,
@@ -16,7 +16,7 @@ impl Rule {
         }
     }
 
-    fn is_valid_value(&self, value: i32) -> bool {
+    pub(super) fn is_valid_value(&self, value: i32) -> bool {
         for (low, high) in &self.ranges {
             if *low <= value && value <= *high {
                 return true;
@@ -43,23 +43,23 @@ impl Ticket {
     }
 
     pub(super) fn is_valid_for_any_rule(&self, rules: &[Rule]) -> (bool, i32) {
-        let result = self
-            .values
-            .iter()
-            .filter(|value| {
-                let count_matching_rules = rules
-                    .iter()
-                    .filter(|rule| rule.is_valid_value(**value))
-                    .count();
+        let result = self.values.iter().find(|value| {
+            let count_matching_rules = rules
+                .iter()
+                .filter(|rule| rule.is_valid_value(**value))
+                .count();
 
-                count_matching_rules == 0
-            })
-            .next();
+            count_matching_rules == 0
+        });
 
         match result {
             Some(value) => (false, *value),
             None => (true, 0),
         }
+    }
+
+    pub(super) fn values(&self) -> &[i32] {
+        &self.values
     }
 }
 

@@ -6,6 +6,7 @@
 #[macro_use]
 extern crate hamcrest2;
 
+use std::collections::{HashMap, HashSet};
 use std::num::ParseIntError;
 use std::result;
 
@@ -107,6 +108,56 @@ fn filter_invalid_tickets<'a>(rules: &[Rule], tickets: &'a [Ticket]) -> Vec<&'a 
         .collect()
 }
 
+fn get_field_mapping<'a>(rules: &'a [Rule], tickets: &[&Ticket]) -> HashMap<&'a Rule, usize> {
+    let index_list = 0..tickets[0].values().len();
+    let mut map = rules
+        .iter()
+        .map(|rule| (rule, index_list.clone().collect::<HashSet<_>>()))
+        .collect::<HashMap<_, HashSet<usize>>>();
+
+    for ticket in tickets {
+        for (i, value) in ticket.values().iter().enumerate() {
+            for rule in rules {
+                if !rule.is_valid_value(*value) {
+                    map.get_mut(rule).unwrap().remove(&i);
+                }
+            }
+        }
+    }
+
+    let mut final_map = HashMap::new();
+
+    loop {
+        for (rule, set) in &map {
+            if set.len() == 1 {
+                final_map.insert(*rule, *set.iter().next().unwrap());
+            }
+        }
+
+        let taken_indexes = map
+            .iter()
+            .filter(|(_, set)| set.len() == 1)
+            .map(|(rule, set)| {
+                let index = *set.iter().next().unwrap();
+                final_map.insert(*rule, index);
+                index
+            })
+            .collect::<HashSet<_>>();
+
+        if taken_indexes.is_empty() {
+            break;
+        }
+
+        map = map
+            .iter()
+            .filter(|(_, set)| set.len() > 1)
+            .map(|(rule, set)| (*rule, set.difference(&taken_indexes).cloned().collect()))
+            .collect();
+    }
+
+    final_map
+}
+
 #[cfg(test)]
 mod tests {
     use hamcrest2::prelude::*;
@@ -195,5 +246,27 @@ mod tests {
 
         let ticket = Ticket::new(vec![7, 3, 47]);
         assert_that!(result, equal_to(vec![&ticket]));
+    }
+
+    #[test]
+    fn get_field_mapping_returns_map() {
+        let rule_class = Rule::new("class", vec![(0, 1), (4, 19)]);
+        let rule_row = Rule::new("row", vec![(0, 5), (8, 19)]);
+        let rule_seat = Rule::new("seat", vec![(0, 13), (16, 19)]);
+        let rules = vec![rule_class.clone(), rule_row.clone(), rule_seat.clone()];
+
+        let ticket0 = Ticket::new(vec![3, 9, 18]);
+        let ticket1 = Ticket::new(vec![15, 1, 5]);
+        let ticket2 = Ticket::new(vec![5, 14, 9]);
+        let ticket3 = Ticket::new(vec![11, 12, 13]);
+
+        let tickets = vec![&ticket0, &ticket1, &ticket2, &ticket3];
+
+        let result = get_field_mapping(&rules, &tickets);
+
+        assert_that!(result.len(), equal_to(3));
+        assert_that!(result[&rule_row], equal_to(0));
+        assert_that!(result[&rule_class], equal_to(1));
+        assert_that!(result[&rule_seat], equal_to(2));
     }
 }
