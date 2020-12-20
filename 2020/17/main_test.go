@@ -21,3 +21,28 @@ func TestMainLogsResults(t *testing.T) {
 	assert.Len(t, lines, 1)
 	assert.Empty(t, lines[0])
 }
+
+func TestBuildInitialPocket(t *testing.T) {
+	p, err := buildInitialPocket("./files/example.txt")
+
+	assert.Nil(t, err)
+	assert.Equal(t, pocket(map[int]map[int]map[int]bool{
+		0: {
+			0: {
+				0: false,
+				1: true,
+				2: false,
+			},
+			1: {
+				0: false,
+				1: false,
+				2: true,
+			},
+			2: {
+				0: true,
+				1: true,
+				2: true,
+			},
+		},
+	}), p)
+}
