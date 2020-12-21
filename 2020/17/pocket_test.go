@@ -60,7 +60,7 @@ func TestRunCycle(t *testing.T) {
 		},
 	})
 
-	p2 := p.runCycle()
+	p2 := p.runCycle(p.countOfActiveNeighbors)
 
 	assert.Equal(t, pocket(map[int]map[int]map[int]bool{
 		-1: {

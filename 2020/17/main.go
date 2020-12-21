@@ -13,7 +13,7 @@ func main() {
 	}
 
 	for i := 0; i < 6; i++ {
-		p = p.runCycle()
+		p = p.runCycle(p.countOfActiveNeighbors)
 	}
 
 	log.Printf("count after 6 cycles: %d\n", p.countActive())

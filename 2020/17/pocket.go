@@ -46,7 +46,7 @@ func (p *pocket) countOfActiveNeighbors(z, y, x int) int {
 	return count
 }
 
-func (p *pocket) runCycle() pocket {
+func (p *pocket) runCycle(countOfActiveNeighbors func(z, y, x int) int) pocket {
 	pNew := make(pocket)
 
 	// Yes, these next lovely lines look like this could be a bit refactored, but no!
@@ -92,7 +92,7 @@ func (p *pocket) runCycle() pocket {
 					value = false
 				}
 
-				countActiveNeighbors := p.countOfActiveNeighbors(z, y, x)
+				countActiveNeighbors := countOfActiveNeighbors(z, y, x)
 
 				newValue := value
 				if value && countActiveNeighbors != 2 && countActiveNeighbors != 3 {
