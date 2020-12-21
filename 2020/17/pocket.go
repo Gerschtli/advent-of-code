@@ -1,5 +1,7 @@
 package main
 
+import "math"
+
 type pocket map[int]map[int]map[int]bool
 
 func (p *pocket) countOfActiveNeighbors(z, y, x int) int {
@@ -26,4 +28,79 @@ func (p *pocket) countOfActiveNeighbors(z, y, x int) int {
 	}
 
 	return count
+}
+
+func (p *pocket) runCycle() pocket {
+	pNew := make(pocket)
+
+	// Yes, these next lovely lines look like this could be a bit refactored, but no!
+	// Gotcha! This is Go: known for its simple syntax, expressiveness and hell of a boilerplate.. Here you go -.-
+	zLow, zHigh := math.MaxInt32, math.MinInt32
+	for i := range *p {
+		if i < zLow {
+			zLow = i
+		}
+		if i > zHigh {
+			zHigh = i
+		}
+	}
+	yLow, yHigh := math.MaxInt32, math.MinInt32
+	for i := range (*p)[0] {
+		if i < yLow {
+			yLow = i
+		}
+		if i > yHigh {
+			yHigh = i
+		}
+	}
+	xLow, xHigh := math.MaxInt32, math.MinInt32
+	for i := range (*p)[0][0] {
+		if i < xLow {
+			xLow = i
+		}
+		if i > xHigh {
+			xHigh = i
+		}
+	}
+
+	for z := zLow - 1; z <= zHigh+1; z++ {
+		plane := make(map[int]map[int]bool)
+
+		for y := yLow - 1; y <= yHigh+1; y++ {
+			row := make(map[int]bool)
+			needRow := false
+
+			for x := xLow - 1; x <= xHigh+1; x++ {
+				value, ok := (*p)[z][y][x]
+				if !ok {
+					value = false
+				}
+
+				countActiveNeighbors := p.countOfActiveNeighbors(z, y, x)
+
+				newValue := value
+				if value && countActiveNeighbors != 2 && countActiveNeighbors != 3 {
+					newValue = false
+				} else if !value && countActiveNeighbors == 3 {
+					newValue = true
+				}
+
+				if newValue {
+					needRow = true
+				}
+
+				row[x] = newValue
+			}
+
+			if needRow {
+				plane[y] = row
+			}
+		}
+
+		if len(plane) != 0 {
+			pNew[z] = plane
+		}
+	}
+
+	return pNew
 }
