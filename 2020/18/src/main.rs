@@ -6,6 +6,8 @@
 #[macro_use]
 extern crate hamcrest2;
 
+mod expression;
+
 fn main() {}
 
 #[cfg(test)]
