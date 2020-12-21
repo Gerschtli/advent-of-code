@@ -84,13 +84,9 @@ func (p *pocket) runCycle(countOfActiveNeighbors func(z, y, x int) int) pocket {
 
 		for y := yLow - 1; y <= yHigh+1; y++ {
 			row := make(map[int]bool)
-			needRow := false
 
 			for x := xLow - 1; x <= xHigh+1; x++ {
-				value, ok := (*p)[z][y][x]
-				if !ok {
-					value = false
-				}
+				value := getValue(z, y, x)
 
 				countActiveNeighbors := countOfActiveNeighbors(z, y, x)
 
@@ -101,21 +97,13 @@ func (p *pocket) runCycle(countOfActiveNeighbors func(z, y, x int) int) pocket {
 					newValue = true
 				}
 
-				if newValue {
-					needRow = true
-				}
-
 				row[x] = newValue
 			}
 
-			if needRow {
-				plane[y] = row
-			}
+			plane[y] = row
 		}
 
-		if len(plane) != 0 {
-			pNew[z] = plane
-		}
+		pNew[z] = plane
 	}
 
 	return pNew

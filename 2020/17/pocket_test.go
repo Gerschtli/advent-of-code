@@ -64,19 +64,25 @@ func TestRunCycle(t *testing.T) {
 
 	assert.Equal(t, pocket(map[int]map[int]map[int]bool{
 		-1: {
-			1: {-1: false, 0: true, 1: false, 2: false, 3: false},
-			2: {-1: false, 0: false, 1: false, 2: true, 3: false},
-			3: {-1: false, 0: false, 1: true, 2: false, 3: false},
+			-1: {-1: false, 0: false, 1: false, 2: false, 3: false},
+			0:  {-1: false, 0: false, 1: false, 2: false, 3: false},
+			1:  {-1: false, 0: true, 1: false, 2: false, 3: false},
+			2:  {-1: false, 0: false, 1: false, 2: true, 3: false},
+			3:  {-1: false, 0: false, 1: true, 2: false, 3: false},
 		},
 		0: {
-			1: {-1: false, 0: true, 1: false, 2: true, 3: false},
-			2: {-1: false, 0: false, 1: true, 2: true, 3: false},
-			3: {-1: false, 0: false, 1: true, 2: false, 3: false},
+			-1: {-1: false, 0: false, 1: false, 2: false, 3: false},
+			0:  {-1: false, 0: false, 1: false, 2: false, 3: false},
+			1:  {-1: false, 0: true, 1: false, 2: true, 3: false},
+			2:  {-1: false, 0: false, 1: true, 2: true, 3: false},
+			3:  {-1: false, 0: false, 1: true, 2: false, 3: false},
 		},
 		1: {
-			1: {-1: false, 0: true, 1: false, 2: false, 3: false},
-			2: {-1: false, 0: false, 1: false, 2: true, 3: false},
-			3: {-1: false, 0: false, 1: true, 2: false, 3: false},
+			-1: {-1: false, 0: false, 1: false, 2: false, 3: false},
+			0:  {-1: false, 0: false, 1: false, 2: false, 3: false},
+			1:  {-1: false, 0: true, 1: false, 2: false, 3: false},
+			2:  {-1: false, 0: false, 1: false, 2: true, 3: false},
+			3:  {-1: false, 0: false, 1: true, 2: false, 3: false},
 		},
 	}), p2)
 }
