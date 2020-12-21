@@ -20,35 +20,49 @@ func (p *pocket) countActive() int {
 	return count
 }
 
-func (p *pocket) countOfActiveNeighbors(z, y, x int) int {
-	count := 0
-	for dz := z - 1; dz <= z+1; dz++ {
-		plane, ok := (*p)[dz]
-		if !ok {
-			continue
-		}
-
-		for dy := y - 1; dy <= y+1; dy++ {
-			row, ok := plane[dy]
+func (p *pocket) countOfActiveNeighbors(ignoreCurrentPosition bool) func(z, y, x int) int {
+	return func(z, y, x int) int {
+		count := 0
+		for dz := z - 1; dz <= z+1; dz++ {
+			plane, ok := (*p)[dz]
 			if !ok {
 				continue
 			}
 
-			for dx := x - 1; dx <= x+1; dx++ {
-				value, ok := row[dx]
-				if ok && value && !(dz == z && dy == y && dx == x) {
-					count++
+			for dy := y - 1; dy <= y+1; dy++ {
+				row, ok := plane[dy]
+				if !ok {
+					continue
+				}
+
+				for dx := x - 1; dx <= x+1; dx++ {
+					value, ok := row[dx]
+					if ok && value && (!ignoreCurrentPosition || !(dz == z && dy == y && dx == x)) {
+						count++
+					}
 				}
 			}
 		}
-	}
 
-	return count
+		return count
+	}
 }
 
 func (p *pocket) runCycle(countOfActiveNeighbors func(z, y, x int) int) pocket {
-	pNew := make(pocket)
+	return buildCycleResult(
+		p.getRanges,
+		func(z, y, x int) bool {
+			value, ok := (*p)[z][y][x]
+			if !ok {
+				value = false
+			}
+			return value
+		},
+		countOfActiveNeighbors,
+	)
+}
 
+func (p *pocket) getRanges() (int, int, int, int, int, int) {
 	// Yes, these next lovely lines look like this could be a bit refactored, but no!
 	// Gotcha! This is Go: known for its simple syntax, expressiveness and hell of a boilerplate.. Here you go -.-
 	zLow, zHigh := math.MaxInt32, math.MinInt32
@@ -78,6 +92,17 @@ func (p *pocket) runCycle(countOfActiveNeighbors func(z, y, x int) int) pocket {
 			xHigh = i
 		}
 	}
+
+	return zLow, zHigh, yLow, yHigh, xLow, xHigh
+}
+
+func buildCycleResult(
+	getRanges func() (int, int, int, int, int, int),
+	getValue func(z, y, x int) bool,
+	countOfActiveNeighbors func(z, y, x int) int,
+) pocket {
+	pNew := make(pocket)
+	zLow, zHigh, yLow, yHigh, xLow, xHigh := getRanges()
 
 	for z := zLow - 1; z <= zHigh+1; z++ {
 		plane := make(map[int]map[int]bool)

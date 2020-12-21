@@ -47,8 +47,8 @@ func TestCountOfActiveNeighbors(t *testing.T) {
 		},
 	})
 
-	assert.Equal(t, 10, p.countOfActiveNeighbors(0, 1, 1))
-	assert.Equal(t, 2, p.countOfActiveNeighbors(-1, 0, 0))
+	assert.Equal(t, 10, p.countOfActiveNeighbors(true)(0, 1, 1))
+	assert.Equal(t, 2, p.countOfActiveNeighbors(true)(-1, 0, 0))
 }
 
 func TestRunCycle(t *testing.T) {
@@ -60,7 +60,7 @@ func TestRunCycle(t *testing.T) {
 		},
 	})
 
-	p2 := p.runCycle(p.countOfActiveNeighbors)
+	p2 := p.runCycle(p.countOfActiveNeighbors(true))
 
 	assert.Equal(t, pocket(map[int]map[int]map[int]bool{
 		-1: {
