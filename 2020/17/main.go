@@ -1,8 +1,22 @@
 package main
 
-import "github.com/Gerschtli/advent-of-code/lib/go/file"
+import (
+	"log"
+
+	"github.com/Gerschtli/advent-of-code/lib/go/file"
+)
 
 func main() {
+	p, err := buildInitialPocket("./files/cubes.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for i := 0; i < 6; i++ {
+		p = p.runCycle()
+	}
+
+	log.Printf("count after 6 cycles: %d\n", p.countActive())
 }
 
 func buildInitialPocket(filename string) (pocket, error) {
