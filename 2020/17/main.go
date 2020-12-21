@@ -12,11 +12,15 @@ func main() {
 		log.Fatal(err)
 	}
 
+	pf := initPocketFixed(p)
+
 	for i := 0; i < 6; i++ {
-		p = p.runCycle(p.countOfActiveNeighbors)
+		p = p.runCycle(p.countOfActiveNeighbors(true))
+		pf = pf.runCycle()
 	}
 
 	log.Printf("count after 6 cycles: %d\n", p.countActive())
+	log.Printf("count fixed after 6 cycles: %d\n", pf.countActive())
 }
 
 func buildInitialPocket(filename string) (pocket, error) {
