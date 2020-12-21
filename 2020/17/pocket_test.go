@@ -6,6 +6,28 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestCountActive(t *testing.T) {
+	p := pocket(map[int]map[int]map[int]bool{
+		-1: {
+			0: {0: true, 1: false, 2: false},
+			1: {0: false, 1: false, 2: true},
+			2: {0: false, 1: true, 2: false},
+		},
+		0: {
+			0: {0: true, 1: false, 2: true},
+			1: {0: false, 1: true, 2: true},
+			2: {0: false, 1: true, 2: false},
+		},
+		1: {
+			0: {0: true, 1: false, 2: false},
+			1: {0: false, 1: false, 2: true},
+			2: {0: false, 1: true, 2: false},
+		},
+	})
+
+	assert.Equal(t, 11, p.countActive())
+}
+
 func TestCountOfActiveNeighbors(t *testing.T) {
 	p := pocket(map[int]map[int]map[int]bool{
 		-1: {

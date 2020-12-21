@@ -4,6 +4,22 @@ import "math"
 
 type pocket map[int]map[int]map[int]bool
 
+func (p *pocket) countActive() int {
+	count := 0
+
+	for _, plane := range *p {
+		for _, row := range plane {
+			for _, value := range row {
+				if value {
+					count++
+				}
+			}
+		}
+	}
+
+	return count
+}
+
 func (p *pocket) countOfActiveNeighbors(z, y, x int) int {
 	count := 0
 	for dz := z - 1; dz <= z+1; dz++ {
