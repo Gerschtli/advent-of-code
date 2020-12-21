@@ -1,14 +1,14 @@
+use crate::expression::Expression::{Addition, Multiplication, Value};
+
 #[derive(Debug, PartialEq)]
 pub(super) enum Expression {
-    Value(i32),
+    Value(i64),
     Addition(Box<Expression>, Box<Expression>),
     Multiplication(Box<Expression>, Box<Expression>),
 }
 
 impl Expression {
     pub(super) fn parse(input: &str) -> Self {
-        use Expression::*;
-
         let mut lhs = None;
         let mut op = None;
         let mut nested_str: Option<String> = None;
@@ -38,7 +38,7 @@ impl Expression {
                             nested_str = None;
                             Self::parse(&string)
                         } else {
-                            Value(c as i32 - '0' as i32)
+                            Value(c as i64 - '0' as i64)
                         };
 
                         lhs = match lhs {
@@ -67,6 +67,14 @@ impl Expression {
 
         lhs.unwrap()
     }
+
+    pub(super) fn evaluate(&self) -> i64 {
+        match self {
+            Expression::Addition(lhs, rhs) => lhs.evaluate() + rhs.evaluate(),
+            Expression::Multiplication(lhs, rhs) => lhs.evaluate() * rhs.evaluate(),
+            Value(value) => *value,
+        }
+    }
 }
 
 #[cfg(test)]
@@ -77,8 +85,6 @@ mod tests {
 
     #[test]
     fn expression_parse() {
-        use Expression::*;
-
         let expr = Expression::parse("1 + 2 * 3");
 
         #[rustfmt::skip]
@@ -98,8 +104,6 @@ mod tests {
 
     #[test]
     fn expression_parse_with_parentheses() {
-        use Expression::*;
-
         let expr = Expression::parse("1 + (2 * 3) + (4 * (5 + 6))");
 
         #[rustfmt::skip]
