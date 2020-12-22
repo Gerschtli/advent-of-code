@@ -10,7 +10,6 @@ use error::Result;
 
 use crate::token::PostfixNotation;
 
-mod expression;
 mod token;
 
 fn main() -> Result<()> {
