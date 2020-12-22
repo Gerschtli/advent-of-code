@@ -8,27 +8,34 @@ extern crate hamcrest2;
 
 use error::Result;
 
-use crate::expression::Expression;
+use crate::token::PostfixNotation;
 
 mod expression;
+mod token;
 
 fn main() -> Result<()> {
-    let sum = run()?;
+    let (sum1, sum2) = run()?;
 
-    println!("sum: {}", sum);
+    println!("sum part 1: {}", sum1);
+    println!("sum part 2: {}", sum2);
 
     Ok(())
 }
 
-fn run() -> Result<i64> {
+fn run() -> Result<(i64, i64)> {
     let lines = file::read_lines("./files/math.txt")?;
-    let sum = lines
+    let sum1 = lines
         .iter()
-        .map(|line| Expression::parse(line))
+        .map(|line| PostfixNotation::parse(line, PostfixNotation::precedences_1))
+        .map(|expression| expression.evaluate())
+        .sum();
+    let sum2 = lines
+        .iter()
+        .map(|line| PostfixNotation::parse(line, PostfixNotation::precedences_2))
         .map(|expression| expression.evaluate())
         .sum();
 
-    Ok(sum)
+    Ok((sum1, sum2))
 }
 
 #[cfg(test)]
@@ -41,6 +48,6 @@ mod tests {
     fn run_returns_result() {
         let result = run();
 
-        assert_that!(result, has(11004703763391));
+        assert_that!(result, has((11004703763391, 290726428573651)));
     }
 }
