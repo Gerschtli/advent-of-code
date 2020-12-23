@@ -71,3 +71,13 @@ func TestValueRuleIsValidReturnsFalseWhenNoMatch(t *testing.T) {
 	assert.Equal(t, false, valid)
 	assert.Equal(t, 0, length)
 }
+
+func TestValueRuleIsValidReturnsFalseWhenIndexTooHigh(t *testing.T) {
+	rule := ValueRule{value: 'a'}
+	rules := make(map[int]Rule)
+
+	valid, length := rule.IsValid(rules, "ab", 2)
+
+	assert.Equal(t, false, valid)
+	assert.Equal(t, 0, length)
+}

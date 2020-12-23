@@ -34,7 +34,7 @@ type ValueRule struct {
 }
 
 func (v ValueRule) IsValid(_ map[int]Rule, input string, index int) (bool, int) {
-	if input[index] == v.value {
+	if index < len(input) && input[index] == v.value {
 		return true, 1
 	}
 	return false, 0
