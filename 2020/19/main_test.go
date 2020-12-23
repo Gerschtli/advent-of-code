@@ -21,3 +21,24 @@ func TestMainLogsResults(t *testing.T) {
 	assert.Len(t, lines, 1)
 	assert.Empty(t, lines[0])
 }
+
+func TestParseLines(t *testing.T) {
+	rules, messages, err := parseNotes("./files/example.txt")
+
+	assert.Nil(t, err)
+	assert.Equal(t, map[int]Rule{
+		0: OrRule{[][]int{{4, 1, 5}}},
+		1: OrRule{[][]int{{2, 3}, {3, 2}}},
+		2: OrRule{[][]int{{4, 4}, {5, 5}}},
+		3: OrRule{[][]int{{4, 5}, {5, 4}}},
+		4: ValueRule{'a'},
+		5: ValueRule{'b'},
+	}, rules)
+	assert.Equal(t, []string{
+		"ababbb",
+		"bababa",
+		"abbbab",
+		"aaabbb",
+		"aaaabbb",
+	}, messages)
+}
