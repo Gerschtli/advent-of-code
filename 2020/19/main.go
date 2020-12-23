@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"strconv"
 	"strings"
 
@@ -8,6 +9,26 @@ import (
 )
 
 func main() {
+	rules, messages, err := parseNotes("./files/notes.txt")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	count := countMessages(messages, rules)
+	log.Printf("count of valid messages: %d\n", count)
+}
+
+func countMessages(messages []string, rules map[int]Rule) int {
+	count := 0
+	for _, message := range messages {
+		valid, length := rules[0].IsValid(rules, message, 0)
+
+		if valid && length == len(message) {
+			count++
+		}
+	}
+
+	return count
 }
 
 func parseNotes(filename string) (map[int]Rule, []string, error) {
