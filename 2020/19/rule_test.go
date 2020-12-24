@@ -10,7 +10,7 @@ func TestOrRuleImplementsRule(t *testing.T) {
 	assert.Implements(t, (*Rule)(nil), OrRule{})
 }
 
-func TestOrRuleIsValidReturnsTrueForMatch(t *testing.T) {
+func TestOrRuleGetMatchesReturnsLengthForMatch(t *testing.T) {
 	rules := map[int]Rule{
 		0: OrRule{[][]int{{4, 1, 5}}},
 		1: OrRule{[][]int{{2, 3}, {3, 2}}},
@@ -20,16 +20,11 @@ func TestOrRuleIsValidReturnsTrueForMatch(t *testing.T) {
 		5: ValueRule{'b'},
 	}
 
-	valid, length := rules[0].IsValid(rules, "aaaabb", 0)
-	assert.Equal(t, true, valid)
-	assert.Equal(t, 6, length)
-
-	valid, length = rules[1].IsValid(rules, "aaaabb", 1)
-	assert.Equal(t, true, valid)
-	assert.Equal(t, 4, length)
+	assert.Equal(t, []int{6}, rules[0].GetMatches(rules, "aaaabb", 0))
+	assert.Equal(t, []int{4}, rules[1].GetMatches(rules, "aaaabb", 1))
 }
 
-func TestOrRuleIsValidReturnsFalseWhenNoMatch(t *testing.T) {
+func TestOrRuleGetMatchesReturnsNilWhenNoMatch(t *testing.T) {
 	rules := map[int]Rule{
 		0: OrRule{[][]int{{4, 1, 5}}},
 		1: OrRule{[][]int{{2, 3}, {3, 2}}},
@@ -39,45 +34,33 @@ func TestOrRuleIsValidReturnsFalseWhenNoMatch(t *testing.T) {
 		5: ValueRule{'b'},
 	}
 
-	valid, length := rules[0].IsValid(rules, "aaaabb", 1)
-	assert.Equal(t, false, valid)
-	assert.Equal(t, 0, length)
-
-	valid, length = rules[1].IsValid(rules, "aaaabb", 2)
-	assert.Equal(t, false, valid)
-	assert.Equal(t, 0, length)
+	assert.Nil(t, rules[0].GetMatches(rules, "aaaabb", 1))
+	assert.Nil(t, rules[1].GetMatches(rules, "aaaabb", 2))
 }
 
 func TestValueRuleImplementsRule(t *testing.T) {
 	assert.Implements(t, (*Rule)(nil), ValueRule{})
 }
 
-func TestValueRuleIsValidReturnsTrueForMatch(t *testing.T) {
+func TestValueRuleGetMatchesReturnsLengthForMatch(t *testing.T) {
 	rule := ValueRule{value: 'a'}
 	rules := make(map[int]Rule)
 
-	valid, length := rule.IsValid(rules, "ab", 0)
+	matches := rule.GetMatches(rules, "ab", 0)
 
-	assert.Equal(t, true, valid)
-	assert.Equal(t, 1, length)
+	assert.Equal(t, []int{1}, matches)
 }
 
-func TestValueRuleIsValidReturnsFalseWhenNoMatch(t *testing.T) {
+func TestValueRuleGetMatchesReturnsNilWhenNoMatch(t *testing.T) {
 	rule := ValueRule{value: 'a'}
 	rules := make(map[int]Rule)
 
-	valid, length := rule.IsValid(rules, "ab", 1)
-
-	assert.Equal(t, false, valid)
-	assert.Equal(t, 0, length)
+	assert.Nil(t, rule.GetMatches(rules, "ab", 1))
 }
 
-func TestValueRuleIsValidReturnsFalseWhenIndexTooHigh(t *testing.T) {
+func TestValueRuleGetMatchesReturnsNilWhenIndexTooHigh(t *testing.T) {
 	rule := ValueRule{value: 'a'}
 	rules := make(map[int]Rule)
 
-	valid, length := rule.IsValid(rules, "ab", 2)
-
-	assert.Equal(t, false, valid)
-	assert.Equal(t, 0, length)
+	assert.Nil(t, rule.GetMatches(rules, "ab", 2))
 }

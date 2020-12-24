@@ -21,10 +21,13 @@ func main() {
 func countMessages(messages []string, rules map[int]Rule) int {
 	count := 0
 	for _, message := range messages {
-		valid, length := rules[0].IsValid(rules, message, 0)
+		matches := rules[0].GetMatches(rules, message, 0)
 
-		if valid && length == len(message) {
-			count++
+		for _, match := range matches {
+			if match == len(message) {
+				count++
+				break
+			}
 		}
 	}
 

@@ -1,41 +1,55 @@
 package main
 
 type Rule interface {
-	IsValid(rules map[int]Rule, input string, index int) (bool, int)
+	GetMatches(rules map[int]Rule, input string, index int) []int
 }
 
 type OrRule struct {
 	rules [][]int
 }
 
-func (o OrRule) IsValid(rules map[int]Rule, input string, index int) (bool, int) {
+func (o OrRule) GetMatches(rules map[int]Rule, input string, index int) []int {
+	var matches []int
 	for _, ruleList := range o.rules {
-		lengthMatch := 0
-		ruleListValid := true
+		lengthMatches := []int{0}
+
 		for _, ruleId := range ruleList {
-			valid, length := rules[ruleId].IsValid(rules, input, index+lengthMatch)
-			if !valid {
-				ruleListValid = false
-				break
+			var newLengths []int
+
+			for _, length := range lengthMatches {
+				for _, match := range rules[ruleId].GetMatches(rules, input, index+length) {
+					newLengths = append(newLengths, length+match)
+				}
 			}
-			lengthMatch += length
+
+			lengthMatches = unique(newLengths)
 		}
 
-		if ruleListValid {
-			return true, lengthMatch
-		}
+		matches = append(matches, lengthMatches...)
 	}
 
-	return false, 0
+	return unique(matches)
+}
+
+func unique(intSlice []int) []int {
+	keys := make(map[int]bool)
+	var list []int
+	for _, entry := range intSlice {
+		if _, value := keys[entry]; !value {
+			keys[entry] = true
+			list = append(list, entry)
+		}
+	}
+	return list
 }
 
 type ValueRule struct {
 	value uint8
 }
 
-func (v ValueRule) IsValid(_ map[int]Rule, input string, index int) (bool, int) {
+func (v ValueRule) GetMatches(_ map[int]Rule, input string, index int) []int {
 	if index < len(input) && input[index] == v.value {
-		return true, 1
+		return []int{1}
 	}
-	return false, 0
+	return nil
 }
