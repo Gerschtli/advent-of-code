@@ -18,9 +18,17 @@ func TestMainLogsResults(t *testing.T) {
 
 	lines := strings.Split(buf.String(), "\n")
 
-	assert.Len(t, lines, 2)
+	assert.Len(t, lines, 3)
 	assert.Contains(t, lines[0], "count of valid messages: 165")
-	assert.Empty(t, lines[1])
+	assert.Contains(t, lines[1], "count of valid messages with loops: 274")
+	assert.Empty(t, lines[2])
+}
+
+func TestRunForExample(t *testing.T) {
+	count, countLoops := run("./files/example2.txt")
+
+	assert.Equal(t, 3, count)
+	assert.Equal(t, 12, countLoops)
 }
 
 func TestParseLines(t *testing.T) {

@@ -9,13 +9,26 @@ import (
 )
 
 func main() {
-	rules, messages, err := parseNotes("./files/notes.txt")
+	count, countLoops := run("./files/notes.txt")
+
+	log.Printf("count of valid messages: %d\n", count)
+	log.Printf("count of valid messages with loops: %d\n", countLoops)
+}
+
+func run(filename string) (int, int) {
+	rules, messages, err := parseNotes(filename)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	count := countMessages(messages, rules)
-	log.Printf("count of valid messages: %d\n", count)
+
+	rules[8] = OrRule{[][]int{{42}, {42, 8}}}
+	rules[11] = OrRule{[][]int{{42, 31}, {42, 11, 31}}}
+
+	countLoops := countMessages(messages, rules)
+
+	return count, countLoops
 }
 
 func countMessages(messages []string, rules map[int]Rule) int {
