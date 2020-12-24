@@ -20,7 +20,8 @@ Can be run like:
 
 ```sh
 cd 2020/01
-go run ./main.go
+go build -o main
+./main
 ```
 
 ### Rust applications
