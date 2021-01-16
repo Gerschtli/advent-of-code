@@ -7,7 +7,7 @@ edition = "2018"
 [dependencies]
 error = { path = "../../lib/rust/error" }
 file = { path = "../../lib/rust/file" }
-regex = "1.4.2"
+regex = "1.4.3"
 lazy_static = "1.4.0"
 
 [dev-dependencies]
