@@ -15,7 +15,7 @@ impl Person {
 
         let mut answers = HashSet::new();
         for char in line.chars() {
-            if 'a' <= char && char <= 'z' {
+            if ('a'..='z').contains(&char) {
                 answers.insert(char);
             } else {
                 return Err(AppError::init(format!("invalid answer: {}", line)));

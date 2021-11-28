@@ -40,7 +40,7 @@ fn get_accumulators() -> Result<(i32, i32)> {
 }
 
 fn get_accumulator_of_mutations(code: &Code) -> Result<i32> {
-    let mut mutator = Mutator::init(&code);
+    let mut mutator = Mutator::init(code);
     loop {
         match mutator.get_next_mutation() {
             Some(code) => {
@@ -54,7 +54,7 @@ fn get_accumulator_of_mutations(code: &Code) -> Result<i32> {
 }
 
 fn get_accumulator(code: &Code, expected_result: RunResult) -> Result<i32> {
-    let mut state = State::init(&code);
+    let mut state = State::init(code);
 
     loop {
         match state.run() {
