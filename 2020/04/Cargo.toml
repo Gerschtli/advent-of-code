@@ -5,7 +5,7 @@ authors = ["Tobias Happ <tobias.happ@gmx.de>"]
 edition = "2018"
 
 [dependencies]
-regex = "1.4.3"
+regex = "1.5.4"
 lazy_static = "1.4.0"
 error = { path = "../../lib/rust/error" }
 file = { path = "../../lib/rust/file" }
