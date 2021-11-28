@@ -41,13 +41,13 @@ fn count_valid_lines() -> Result<(usize, usize)> {
 
     let count_sled_rental = line_vec
         .iter()
-        .map(|line| is_valid_for_sled_rental(line))
+        .map(is_valid_for_sled_rental)
         .filter(|is_valid| *is_valid)
         .count();
 
     let count_otca = line_vec
         .iter()
-        .map(|line| is_valid_for_otca(line))
+        .map(is_valid_for_otca)
         .filter(|is_valid| *is_valid)
         .count();
 
