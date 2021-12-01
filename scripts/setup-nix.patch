@@ -1,0 +1,66 @@
+diff --git a/YEAR/DAY/code.nix b/YEAR/DAY/code.nix
+--- /dev/null
++++ b/YEAR/DAY/code.nix
+@@ -0,0 +1,17 @@
++{ pkgs }:
++
++let
++in
++
++{
++  tests = [
++    {
++      description = "";
++      actual = 0;
++      expected = 0;
++    }
++  ];
++
++  solution = ''
++  '';
++}
+diff --git a/YEAR/DAY/flake.lock b/YEAR/DAY/flake.lock
+--- /dev/null
++++ b/YEAR/DAY/flake.lock
+@@ -0,0 +1,26 @@
++{
++  "nodes": {
++    "nixpkgs": {
++      "locked": {
++        "lastModified": 1638393813,
++        "narHash": "sha256-R1OyNqKoGSNL35VHSEAD5wJvb6/FF5NvhPm4AlSKI+8=",
++        "owner": "NixOS",
++        "repo": "nixpkgs",
++        "rev": "a77874bb9c35445a00875e9de5758edda78f8326",
++        "type": "github"
++      },
++      "original": {
++        "owner": "NixOS",
++        "repo": "nixpkgs",
++        "type": "github"
++      }
++    },
++    "root": {
++      "inputs": {
++        "nixpkgs": "nixpkgs"
++      }
++    }
++  },
++  "root": "root",
++  "version": 7
++}
+diff --git a/YEAR/DAY/flake.nix b/YEAR/DAY/flake.nix
+--- /dev/null
++++ b/YEAR/DAY/flake.nix
+@@ -0,0 +1,11 @@
++{
++  description = "advent-of-code-YEAR-DAY";
++
++  inputs.nixpkgs.url = "github:NixOS/nixpkgs";
++
++  outputs = { self, nixpkgs }:
++    import ../../lib/nix/flake-builder.nix {
++      inherit nixpkgs;
++      codeFile = ./code.nix;
++    };
++}
