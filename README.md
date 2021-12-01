@@ -12,7 +12,8 @@ days) and of course for the most important reason: Because I can :D
 
 ## How to run
 
-You need go 1.15 and rustup (with a recent rust version) installed or use my `shell.nix`.
+You need go 1.15, nix (at least 2.4 with flakes and nix-command enabled) and rustup (with a recent rust version)
+installed or use my `shell.nix`.
 
 ### Go applications
 
@@ -22,6 +23,15 @@ Can be run like:
 cd 2020/01
 go build -o main
 ./main
+```
+
+### Nix applications
+
+Can be run like:
+
+```sh
+cd 2021/01
+nix run
 ```
 
 ### Rust applications
