@@ -61,6 +61,29 @@ jobs:
         run: go test -v ./...
         working-directory: ${{ matrix.directory }}
 
+  nix:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        directory:
+          - 2021/01
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install nix
+        uses: cachix/install-nix-action@v16
+
+      - name: Check flake
+        run: nix flake check
+        working-directory: ${{ matrix.directory }}
+
+      - name: Run app
+        run: nix run
+        working-directory: ${{ matrix.directory }}
+
   rust:
     runs-on: ubuntu-latest
     strategy:
