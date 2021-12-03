@@ -1,3 +1,10 @@
+# nix
 result
 result-*
+
+# python
+.pytest_cache/
+*.pyc
+
+# rust
 target
