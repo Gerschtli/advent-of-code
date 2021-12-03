@@ -106,7 +106,7 @@ jobs:
 
       - name: Cache pipenv
         id: cache-pipenv
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.local/share/virtualenvs
           key: ${{ runner.os }}-pipenv-${{ matrix.directory }}-${{ hashFiles('**/Pipfile.lock') }}
