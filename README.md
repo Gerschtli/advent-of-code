@@ -34,6 +34,16 @@ cd 2021/01
 nix run
 ```
 
+### Python applications
+
+Can be run like:
+
+```sh
+cd 2021/02
+pipenv install --deploy
+pipenv run app
+```
+
 ### Rust applications
 
 Can be run like:
