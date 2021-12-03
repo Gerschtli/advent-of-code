@@ -46,28 +46,28 @@ in
 {
   tests = {
     "test that count of increments of example input is 7" = {
-      expr = countIncreasesOfFile ./input-example.txt;
+      expr = countIncreasesOfFile ./files/input-example.txt;
       expected = 7;
     };
 
     "test that count of increments of input.txt is 1292" = {
-      expr = countIncreasesOfFile ./input.txt;
+      expr = countIncreasesOfFile ./files/input.txt;
       expected = 1292;
     };
 
     "test that count of sliding window increments of example input is 5" = {
-      expr = countSlidingWindowIncreases ./input-example.txt;
+      expr = countSlidingWindowIncreases ./files/input-example.txt;
       expected = 5;
     };
 
     "test that count of sliding window increments of input.txt is 1262" = {
-      expr = countSlidingWindowIncreases ./input.txt;
+      expr = countSlidingWindowIncreases ./files/input.txt;
       expected = 1262;
     };
   };
 
   solution = ''
-    Count of larger measurements: ${toString (countIncreasesOfFile ./input.txt)}
-    Count of larger measurements within sliding window: ${toString (countSlidingWindowIncreases ./input.txt)}
+    Count of larger measurements: ${toString (countIncreasesOfFile ./files/input.txt)}
+    Count of larger measurements within sliding window: ${toString (countSlidingWindowIncreases ./files/input.txt)}
   '';
 }
