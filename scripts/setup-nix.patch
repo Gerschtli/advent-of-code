@@ -1,20 +1,19 @@
 diff --git a/YEAR/DAY/code.nix b/YEAR/DAY/code.nix
 --- /dev/null
-+++ b/YEAR/DAY/code.nix
-@@ -0,0 +1,17 @@
++++ b/YEAR/DAY/app.nix
+@@ -0,0 +1,16 @@
 +{ pkgs }:
 +
 +let
 +in
 +
 +{
-+  tests = [
-+    {
-+      description = "";
-+      actual = 0;
++  tests = {
++    "test that ..." = {
++      expr = 0;
 +      expected = 0;
-+    }
-+  ];
++    };
++  };
 +
 +  solution = ''
 +  '';
@@ -61,6 +60,6 @@ diff --git a/YEAR/DAY/flake.nix b/YEAR/DAY/flake.nix
 +  outputs = { self, nixpkgs }:
 +    import ../../lib/nix/flake-builder.nix {
 +      inherit nixpkgs;
-+      codeFile = ./code.nix;
++      appFile = ./app.nix;
 +    };
 +}

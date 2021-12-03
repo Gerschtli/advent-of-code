@@ -6,6 +6,6 @@
   outputs = { self, nixpkgs }:
     import ../../lib/nix/flake-builder.nix {
       inherit nixpkgs;
-      codeFile = ./code.nix;
+      appFile = ./app.nix;
     };
 }

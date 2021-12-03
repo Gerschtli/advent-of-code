@@ -1,4 +1,4 @@
-{ nixpkgs, codeFile }:
+{ nixpkgs, appFile }:
 
 let
   system = "x86_64-linux";
@@ -10,14 +10,9 @@ let
   evalTests = tests:
     let
       inherit (builtins) length trace;
-      inherit (pkgs.lib) concatMapStringsSep foldl optional;
+      inherit (pkgs.lib) concatMapStringsSep foldl optional runTests;
 
-      failedTests = foldl
-        (failedTests: { actual, expected, ... } @ test:
-          failedTests ++ optional (actual != expected) test
-        )
-        [ ]
-        tests;
+      failedTests = runTests tests;
     in
     if failedTests == [ ]
     then success
@@ -26,24 +21,24 @@ let
         ''
           ${toString (length failedTests)} tests failed!
 
-          ${concatMapStringsSep "\n" ({ description, actual, expected }: ''
-            > ${description}
-                actual:   ${toString actual}
+          ${concatMapStringsSep "\n" ({ name, result, expected }: ''
+            > ${name}
+                result:   ${toString result}
                 expected: ${toString expected}
           '') failedTests}
         ''
         fail;
 
-  code = import codeFile { inherit pkgs; };
+  app = import appFile { inherit pkgs; };
 in
 
 {
-  checks.${system}.tests = evalTests code.tests;
+  checks.${system}.tests = evalTests app.tests;
 
   defaultApp.${system} = {
     type = "app";
     program = "${pkgs.writeScript "solution" ''
-      cat ${pkgs.writeText "solution-content" code.solution}
+      cat ${pkgs.writeText "solution-content" app.solution}
     ''}";
   };
 }

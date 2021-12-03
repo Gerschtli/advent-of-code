@@ -44,31 +44,27 @@ let
 in
 
 {
-  tests = [
-    {
-      description = "count of increments of example input is 7";
-      actual = countIncreasesOfFile ./input-example.txt;
+  tests = {
+    "test that count of increments of example input is 7" = {
+      expr = countIncreasesOfFile ./input-example.txt;
       expected = 7;
-    }
+    };
 
-    {
-      description = "count of increments of input.txt is 1292";
-      actual = countIncreasesOfFile ./input.txt;
+    "test that count of increments of input.txt is 1292" = {
+      expr = countIncreasesOfFile ./input.txt;
       expected = 1292;
-    }
+    };
 
-    {
-      description = "count of sliding window increments of example input is 5";
-      actual = countSlidingWindowIncreases ./input-example.txt;
+    "test that count of sliding window increments of example input is 5" = {
+      expr = countSlidingWindowIncreases ./input-example.txt;
       expected = 5;
-    }
+    };
 
-    {
-      description = "count of sliding window increments of input.txt is 1262";
-      actual = countSlidingWindowIncreases ./input.txt;
+    "test that count of sliding window increments of input.txt is 1262" = {
+      expr = countSlidingWindowIncreases ./input.txt;
       expected = 1262;
-    }
-  ];
+    };
+  };
 
   solution = ''
     Count of larger measurements: ${toString (countIncreasesOfFile ./input.txt)}
