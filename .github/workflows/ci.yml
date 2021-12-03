@@ -84,6 +84,46 @@ jobs:
         run: nix run
         working-directory: ${{ matrix.directory }}
 
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        directory:
+          - 2021/02
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.10.0
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Cache pipenv
+        id: cache-pipenv
+        uses: actions/cache@v1
+        with:
+          path: ~/.local/share/virtualenvs
+          key: ${{ runner.os }}-pipenv-${{ matrix.directory }}-${{ hashFiles('**/Pipfile.lock') }}
+
+      - name: Install dependencies
+        if: steps.cache-pipenv.outputs.cache-hit != 'true'
+        run: pipenv install --deploy --dev
+        working-directory: ${{ matrix.directory }}
+
+      - name: Run tests
+        run: pipenv run test
+        working-directory: ${{ matrix.directory }}
+
+      - name: Run app
+        run: pipenv run app
+        working-directory: ${{ matrix.directory }}
+
   rust:
     runs-on: ubuntu-latest
     strategy:
