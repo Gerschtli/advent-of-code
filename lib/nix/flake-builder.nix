@@ -9,10 +9,33 @@ let
 
   evalTests = tests:
     let
-      inherit (builtins) length trace;
-      inherit (pkgs.lib) concatMapStringsSep foldl optional runTests;
+      inherit (builtins)
+        genList
+        length
+        replaceStrings
+        trace
+        typeOf
+        ;
+      inherit (pkgs.lib)
+        concatMapStringsSep
+        foldl
+        generators
+        id
+        runTests
+        ;
 
       failedTests = runTests tests;
+
+      printValue = indention: value:
+        replaceStrings
+          [ "\n" ]
+          [ (foldl (a: _: a + " ") "\n" (genList id indention)) ]
+          (generators.toPretty { allowPrettyValues = true; } value);
+
+      printStatement = description: value: ''
+        --> ${description}: (type: ${typeOf value})
+            ${printValue 4 value}
+      '';
     in
     if failedTests == [ ]
     then success
@@ -23,13 +46,24 @@ let
 
           ${concatMapStringsSep "\n" ({ name, result, expected }: ''
             > ${name}
-                result:   ${toString result}
-                expected: ${toString expected}
+
+            ${printStatement "result" result}
+            ${printStatement "expected" expected}
           '') failedTests}
         ''
         fail;
 
-  app = import appFile { inherit pkgs; };
+  helpers = {
+    assertExceptionIsThrown = expr: {
+      expr = builtins.tryEval (builtins.deepSeq expr expr);
+      expected = {
+        success = false;
+        value = false;
+      };
+    };
+  };
+
+  app = import appFile { inherit helpers pkgs; };
 in
 
 {
