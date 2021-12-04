@@ -68,6 +68,7 @@ jobs:
       matrix:
         directory:
           - 2021/01
+          - 2021/03
 
     steps:
       - name: Checkout code
