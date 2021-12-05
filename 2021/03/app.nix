@@ -2,6 +2,8 @@
 
 let
   inherit (builtins)
+    add
+    elemAt
     head
     length
     tail
@@ -9,6 +11,7 @@ let
   inherit (pkgs.lib)
     fileContents
     init
+    groupBy
     last
     foldl
     splitString
@@ -21,7 +24,7 @@ let
   splitNumberStringToDigits = str: map toInt (stringToCharacters str);
   countOnesInPosition = listOfNumbers:
     foldl
-      (zipListsWith (a: b: a + b))
+      (zipListsWith add)
       (head listOfNumbers)
       (tail listOfNumbers);
 
@@ -61,6 +64,34 @@ let
     {
       gamma = binaryToDecimal binaryRates.gamma;
       epsilon = binaryToDecimal binaryRates.epsilon;
+    };
+
+  calculateRating = listOfNumbers: index: oxygen:
+    let
+      grouped = groupBy (binary: toString (elemAt binary index)) listOfNumbers;
+
+      count1 = length grouped."1";
+      count0 = length grouped."0";
+
+      newList =
+        if (oxygen && count1 >= count0) || (!oxygen && count1 < count0)
+        then grouped."1"
+        else grouped."0";
+    in
+    if length listOfNumbers == 1
+    then elemAt listOfNumbers 0
+    else calculateRating newList (index + 1) oxygen;
+
+
+  evaluateReport2 = file:
+    let
+      listOfNumbers = map splitNumberStringToDigits (readFileToStrings file);
+      oneCounts = countOnesInPosition listOfNumbers;
+      binaryRatings = calculateRates (length listOfNumbers) oneCounts;
+    in
+    {
+      oxygen = binaryToDecimal (calculateRating listOfNumbers 0 true);
+      co2 = binaryToDecimal (calculateRating listOfNumbers 0 false);
     };
 in
 
@@ -129,6 +160,22 @@ in
         epsilon = 2319;
       };
     };
+
+    "test that evaluateReport2 for example data returns oxygen and CO2 ratings" = {
+      expr = evaluateReport2 ./files/input-example.txt;
+      expected = {
+        oxygen = 23;
+        co2 = 10;
+      };
+    };
+
+    "test that evaluateReport2 for input data returns oxygen and CO2 ratings" = {
+      expr = evaluateReport2 ./files/input.txt;
+      expected = {
+        oxygen = 1527;
+        co2 = 2510;
+      };
+    };
   };
 
   solution = ''
@@ -137,6 +184,12 @@ in
         rates = evaluateReport ./files/input.txt;
       in
       toString (rates.gamma * rates.epsilon)
+    }
+    part 2: ${
+      let
+        ratings = evaluateReport2 ./files/input.txt;
+      in
+      toString (ratings.oxygen * ratings.co2)
     }
   '';
 }
