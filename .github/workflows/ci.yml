@@ -111,7 +111,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.local/share/virtualenvs
-          key: ${{ runner.os }}-python-${{ steps.setup-python.outputs.python-version }}-pipenv-${{ hashFiles(format('{0}/Pipfile.lock', matrix.directory)) }}
+          key: ${{ runner.os }}-${{ matrix.directory }}-pipenv-${{ hashFiles(format('{0}/Pipfile.lock', matrix.directory)) }}
 
       - name: Install dependencies
         if: steps.cache-pipenv.outputs.cache-hit != 'true'
