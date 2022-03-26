@@ -35,8 +35,7 @@ impl Person {
     pub(super) fn get_answer_count(persons: &[Person]) -> usize {
         let answers = persons
             .iter()
-            .map(|p| &p.answers)
-            .flatten()
+            .flat_map(|p| &p.answers)
             .collect::<HashSet<_>>();
 
         answers.len()
