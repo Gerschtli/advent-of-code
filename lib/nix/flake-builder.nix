@@ -69,7 +69,7 @@ in
 {
   checks.${system}.tests = evalTests app.tests;
 
-  defaultApp.${system} = {
+  apps.${system}.default = {
     type = "app";
     program = "${pkgs.writeScript "solution" ''
       cat ${pkgs.writeText "solution-content" app.solution}
