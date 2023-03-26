@@ -60,7 +60,6 @@ fn get_sub_chain_count(adapters: &[i32], index: usize, cache: &mut [i64], is_fir
     };
 
     (first_index..adapters.len())
-        .into_iter()
         .take_while(|i| adapters[*i] <= joltage + 3)
         .map(|i| get_sub_chain_count_cached(adapters, i, cache, false))
         .sum()

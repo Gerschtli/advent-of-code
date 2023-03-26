@@ -15,7 +15,7 @@ impl Person {
 
         let mut answers = HashSet::new();
         for char in line.chars() {
-            if ('a'..='z').contains(&char) {
+            if char.is_ascii_lowercase() {
                 answers.insert(char);
             } else {
                 return Err(AppError::init(format!("invalid answer: {}", line)));

@@ -45,7 +45,7 @@ fn parse_program(lines: &[String]) -> Result<Vec<Instruction>> {
             let mask = captures.get(1).unwrap().as_str();
             let mut masks = vec![];
 
-            for (i, char) in mask.chars().into_iter().enumerate() {
+            for (i, char) in mask.chars().enumerate() {
                 let value = match char {
                     '1' => BitValue::One,
                     '0' => BitValue::Zero,
