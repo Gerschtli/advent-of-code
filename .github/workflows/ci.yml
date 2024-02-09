@@ -46,7 +46,7 @@ jobs:
         working-directory: ${{ matrix.directory }}
 
       - name: Run golangci-lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action@v4
         with:
           version: v1.30
           working-directory: ${{ matrix.directory }}
