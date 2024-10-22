@@ -71,7 +71,7 @@ in
 
   apps.${system}.default = {
     type = "app";
-    program = "${pkgs.writeScript "solution" ''
+    program = "${pkgs.writeShellScript "solution" ''
       cat ${pkgs.writeText "solution-content" app.solution}
     ''}";
   };
